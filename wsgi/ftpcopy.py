@@ -19,10 +19,10 @@ def ftpcopier(filename,source,userId):
     
     os.chdir(source)
     try:
-    image = Image.open(filename)
-    w, h = image.size
-    image = image.resize((w/3, h/3), Image.ANTIALIAS)
-    image.save(filename, 'JPEG', quality=80)
+        image = Image.open(filename)
+        w, h = image.size
+        image = image.resize((w/3, h/3), Image.ANTIALIAS)
+        image.save(filename, 'JPEG', quality=80)
     except:
         print("image resize failed")
 
