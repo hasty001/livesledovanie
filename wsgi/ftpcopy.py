@@ -1,5 +1,6 @@
 import os
 import ftplib
+from PIL import Image
 
 def ftpcopier(filename,source,userId):
     ftp = ftplib.FTP('cestasnp.sk')
