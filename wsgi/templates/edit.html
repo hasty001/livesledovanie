@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+{% block body %}
+  <form action="" method=post class="form-horizontal">
+    <h2>Uprav správu</h2>
+    <div class="control-group">
+        <div class="controls">
+          <input type="text" id="lat" name="lat" class="input-xlarge"
+            placeholder="latitude" value="{{ sprava.lat }}"
+            required>
+        </div>
+    </div>
+ 
+ <div class="control-group">
+        <div class="controls">
+          <input type="text" id="lon" name="lon" class="input-xlarge"
+            placeholder="longitude" value="{{ sprava.lon }}"
+            required>
+        
+            <input type="hidden" id="accuracy" name="accuracy" class="input-xlarge" value="{{ sprava.accuracy }}" required>
+            <div id="presnost"></div>
+        </div>
+    </div>
+ <div class="control-group has-feedback has-feedback-left">
+        <div class="controls">            
+            <label for="message" class="btn btn-primary"><i class="icon-map-marker "></i> Načítaj z GPS</label>
+            <input id='message' type="button" class="hidden" value="" onclick="javascript:setGeoLocation()">
+        </div>
+    </div>      
+<script>
+
+function setGeoLocation(){
+
+    function success (position) {
+        
+        if (position.coords.accuracy > 80) {
+        alert("Pozícia nie je dostatočne presná. Načítaj súradnice ešte raz!\n\nNezabudni povoliť 'satelity GPS' v lokalizačných službách tvojho telefónu.");
+             document.getElementById('lat').value = position.coords.latitude;
+            document.getElementById('lon').value = position.coords.longitude;
+           document.getElementById('presnost').innerHTML = "<b><font color=\"red\">Presnost pozicie je +/-" + position.coords.accuracy + " m</font></b>";
+           document.getElementById('accuracy').value = position.coords.accuracy;
+        } else {
+            document.getElementById('lat').value = position.coords.latitude;
+            document.getElementById('lon').value = position.coords.longitude;
+           document.getElementById('presnost').innerHTML = "Presnost pozicie je +/-" + position.coords.accuracy + " m";
+           document.getElementById('accuracy').value = position.coords.accuracy;
+        }
+        
+        };
+
+        function error (err) {
+            console.log('error message');
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(success, error, {enableHighAccuracy: true, maximumAge: 0, timeout:25000});
+        } else {
+            error('Location services must be enabled to use this');
+        }
+
+    };
+
+// jQuery plugin to prevent double submission of forms
+jQuery.fn.preventDoubleSubmission = function() {
+  $(this).on('submit',function(e){
+    var $form = $(this);
+    if ($form.data('submitted') === true) {
+      // Previously submitted - don't submit again
+      e.preventDefault();
+    } else {
+      // Mark it so that the next submit can be ignored
+      $form.data('submitted', true);
+    }
+  });
+ 
+  // Keep chainability
+  return this;
+};
+$('form').preventDoubleSubmission();
+
+</script>
+    <div class="control-group">
+        <div class="controls">
+          <textarea name="text" rows=10 class="input-xlarge" placeholder="správa" required>{{ sprava.text }}</textarea>
+        </div>
+    </div>
+ 
+     
+    <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn btn-success">Ulož správu</button>
+          alebo <a href="{{ url_for('index') }}">Späť na zoznam</a>
+        </div>
+    </div>
+  </form>
+{% endblock %}

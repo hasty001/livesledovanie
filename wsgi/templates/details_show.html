@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block body %}
+</script>
+
+
+    <h3>O mojej Ceste</h3>
+    <div class="control-group">
+        <div class="controls">
+          
+            <h4>{{ detail.meno }}</h4>
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <div class="controls">
+          {{ detail.text }}
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <div class="controls">
+          Začínam(e): {{ detail.start_miesto }}
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <div class="controls">
+          Cestujem(e): {{ detail.number }}
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <div class="controls">
+            Vyrážam(e): {{ detail.start_date }}            
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            Ukončili sme: {{ detail.end_date }}            
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            Kompletná cesta? {{ detail.completed }}            
+        </div>
+    </div>
+    </br>
+     <form action="/details_edit"class="display">
+        <label for="edit" class="btn btn-primary"><i class="icon-pencil icon-white"></i> Edit</label>
+        <input id="edit" type="submit" name="edit" value="Edit" class="hidden">
+    </form>
+     
+    
+
+
+
+{% endblock %}

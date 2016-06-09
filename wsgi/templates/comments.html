@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block body %}
+<div id="main" class="container">
+
+    <a class="btn btn-primary" href="http://cestasnp.sk/index.php/component/content/article/79-spravy-z-terenu/{{clanok_id}}" target="_blank">Pošli komentár</a> (z CestaSNP.sk)
+</p>
+    <table class="table table-hover">
+      <tr>
+        <th>Dátum<br> Od
+        <th>Komentár
+      {%- for comment in comments %}
+      </tr>
+      <tr>
+        
+        <td>{{ comment.date.strftime('%d.%m.\'%y %H:%M:%S') }} <br> <b>{{ comment.username }}</b>  </td>
+        <td>{{ comment.comment }}</td>
+      </tr>
+      {%- endfor %}
+    </table>
+    
+    <p>    
+    <a class="btn btn-primary" href="http://cestasnp.sk/index.php/component/content/article/79-spravy-z-terenu/{{clanok_id}}" target="_blank">Pošli komentár</a> (z CestaSNP.sk)
+</p>
+ 
+</div>
+{% endblock %}

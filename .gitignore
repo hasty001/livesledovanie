@@ -1,0 +1,7 @@
+/virtenv
+/php
+/sql
+/img
+/.idea
+wsgi/templates/*.html~
+*.py~

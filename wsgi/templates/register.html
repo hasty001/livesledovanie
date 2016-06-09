@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block body %}
+  <form action="" method=post class="form-horizontal">
+    <h3>Registruj sa pre používanie aplikácie LIVE Sledovanie</h3>
+    <div class="control-group">
+        <div class="controls">
+          <input type="text" id="username" name="username" class="input-xlarge"
+            placeholder="Užívateľské meno" value="{{ request.form.username }}"
+            required>
+        </div>
+    </div>
+ 
+    <div class="control-group">
+        <div class="controls">
+          <input type="password" id="password" name="password" class="input-xlarge"
+            placeholder="Heslo" value="{{ request.form.password }}"
+            required>
+        </div>
+    </div>
+ 
+    <div class="control-group">
+        <div class="controls">
+          <input type="email" id="email" name="email" class="input-xlarge"
+            placeholder="Email" value="{{ request.form.username }}"
+            required>
+        </div>
+    </div>
+ 
+    <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn btn-success">Registrovať</button>
+        </div>
+    </div>
+  </form>
+{% endblock %}

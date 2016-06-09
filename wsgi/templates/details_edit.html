@@ -1,0 +1,115 @@
+{% extends "layout.html" %}
+{% block body %}
+</script>
+
+
+ <form action="" method=post enctype=multipart/form-data class="form-horizontal">
+    <h3>O mojej Ceste</h3>
+    <div class="control-group">
+        <div class="controls">
+          <input type="text" id="meno" name="meno" class="input-xlarge"
+            placeholder="Názov mojej skupiny" value="{{ detail.meno }}"
+            required>
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <div class="controls">
+          <textarea name="text" rows=10 class="input-xlarge" placeholder="O tvojej Ceste" required>{{ detail.text }}</textarea>
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <div class="controls">
+          <input type="text" id="start_miesto" name="start_miesto" class="input-xlarge"
+            placeholder="Kde štartuješ(te)" value="{{ detail.start_miesto }}"
+            required>
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <div class="controls">
+          <input type="number" id="number" name="number" class="input-xlarge"
+            placeholder="Koľko vás ide? (0 ak nechceš uviesť)" value="{{detail.number }}"
+            required>
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <div class="controls">
+            <p><b>Kedy vyrážaš(te)?</b></p>
+           <div id="datepicker" class="input-append date">
+            <input type="text" id="start_date" name="start_date" class="input-xlarge"
+            placeholder="{{ detail.start_date }}" value="{{ detail.start_date }}"
+            required min="0" max="15"> <span class="add-on"> <i class="icon-calendar"></i> </span>
+            </div>
+        </div>
+    </div>
+   <script>
+$('#datepicker').datepicker({
+    format: "d.m.yyyy",
+    todayBtn: "linked",
+    language: "sk",
+    keyboardNavigation: false,
+    forceParse: false,
+    autoclose: true,
+    todayHighlight: true
+});
+
+    </script> 
+    <div class="control-group">
+        <div class="controls">
+            <p><b>Kedy si ukončil cestu?</b></p>
+            <div id="datepicker2" class="input-append date">
+            <input type="text" id="end_date" name="end_date" class="input-xlarge"
+            placeholder="{{ detail.end_date }}" value="{{ detail.end_date }}"
+            required> <span class="add-on"> <i class="icon-calendar"></i> </span>
+            </div>
+        </div>
+    </div>
+
+    
+    
+<script>
+$('#datepicker2').datepicker({
+    format: "d.m.yyyy",
+    todayBtn: "linked",
+    language: "sk",
+    keyboardNavigation: false,
+    forceParse: false,
+    autoclose: true,
+    todayHighlight: true
+});
+
+    </script>
+        
+    <div class="control-group">
+     
+    <div class="controls">
+    <p><b>Ukončil si svoju Cestu úspešne?</b></p>
+    <form>
+    {% if '1' in active_btns %}
+        <input checked type="radio" name="gender" value="1"/> Ano
+    {% else %}
+        <input type="radio" name="gender" value="1"/> Ano
+    {% endif %}
+    {% if '0' in active_btns %}
+        <input checked class="nie" type="radio" name="gender" value="0"/> Nie
+    {% else %}
+        <input class="nie" type="radio" name="gender" value="0"/> Nie
+    {% endif %}
+    
+</div>
+    </div>
+    
+     
+    <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn btn-success">Ulož</button>
+          alebo <a href="{{ url_for('index') }}">Zruš zmeny</a>
+        </div>
+    </div>
+  </form>
+
+
+{% endblock %}

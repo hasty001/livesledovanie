@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+{% block body %}
+<body onload="initCoords()">
+<script type=text/javascript>
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+<script type=text/javascript>
+
+function initCoords() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(initialize, locationError,{enableHighAccuracy: true, maximumAge: 0, timeout:25000});
+  } else {
+    showError("Určenie polohy nie je podporvané v tvojom zariadení");
+  }
+}
+
+function initialize(position) {
+    if (position.coords.accuracy > 40) {
+        alert("Pozícia nie je dostatočne presná. Načítaj súradnice ešte raz! Presnost je +/- " + position.coords.accuracy + "m");
+    } else {
+        window.$positions = {
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+            presnost: position.coords.accuracy
+        };
+	console.log(position.coords);
+    	console.log("Accuracy: "+window.$positions.presnost+"\nLatitude: "+window.$positions.lat+"\nLongitude: "+window.$positions.lon);
+    }
+    // Debugging
+    
+    
+}
+function locationError() {
+            alert("Určenie polohy nie je podporvané v tvojom zariadení");
+        }
+        
+$(function() {
+    $('#message').bind('click', function() {
+	try {      
+		initCoords();
+		$.getJSON($SCRIPT_ROOT + '/scitaj', {
+		a: window.$positions.presnost,
+		b: window.$positions.lat,
+		c: window.$positions.lon
+		}, function(data) {
+		$("#result").text(data.result);
+		});
+      		return false;
+	}
+	catch(err) {
+		console.log("error v nacitani suradnic");	
+	}
+      
+    });
+  });
+</script>
+
+<h1>jQuery Example</h1>
+
+
+
+    <div class="control-group">
+        <div class="controls">
+          
+            
+            <input type="hidden" id="accuracy" name="accuracy" class="input-xlarge"         value="" required>
+            <div id="presnost"></div>
+            
+        </div>
+        
+    </div>
+    
+        
+    
+    <div class="control-group has-feedback has-feedback-left">
+        <div class="controls">            
+            <label for="message" class="btn btn-primary"><i class="icon-map-marker "></i> Načítaj z GPS</label>
+            <input id='message' type="button" class="hidden" value="" >
+        </div>
+        
+        <p> =
+            <span id=result>?</span>
+            <br>
+    </div> 
+</body>
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends "layout.html" %}
+{% block body %}
+
+</script>
+  <form action="" method=post enctype=multipart/form-data class="form-horizontal">
+    <h3>Pridaj miesto na zoznam "Dôležitých miest"</h3>
+    <p style="text-align: justify">Pomôž nám založiť databázu dôležitých miest na Ceste hrdinov SNP. Táto funkcionalita je zatial v režime beta, a umožňuje len vkladať  miesta. Hneď ako to bude možné prinesieme aj zobrazovanie miest.</p>
+    <div class="control-group">
+        <div class="controls">
+          <input type="text" id="lat" name="lat" class="input-xlarge"
+            placeholder="Zem. šírka (latitude)" value="{{ request.form.lat }}"
+            required>
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <div class="controls">
+          <input type="text" id="lon" name="lon" class="input-xlarge"
+            placeholder="Zem. dĺžka (longitude)" value="{{ request.form.lon }}"
+            required>
+            
+            <input type="hidden" id="accuracy" name="accuracy" class="input-xlarge" value="{{ request.form.accuracy }}" required>
+            <div id="presnost"></div>
+            
+        </div>
+        
+    </div>
+    
+        
+    
+    <div class="control-group has-feedback has-feedback-left">
+        <div class="controls">            
+            <label for="message" class="btn btn-primary"><i class="icon-map-marker "></i> Načítaj z GPS</label>
+            <input id='message' type="button" class="hidden" value="" onclick="javascript:setGeoLocation()">
+        </div>
+    </div>  
+    
+      
+<script>
+
+function setGeoLocation(){
+
+    function success (position) {
+        
+        if (position.coords.accuracy === 0) {
+            alert("Nedarí sa nám zistiť presnosť zadaných súradníc. Je možné že tvoj telefón blokuje prístup k týmto informáciam. Skús povoliť 'satelity GPS' v lokalizačných službách tvojho telefónu a zároveň autorizovať túto stránku pre prístup k lokalizačným dátam.\n\nBez znalosti presnosti pozície nemôžeme toto miesto zaradiť do 'Dôležitých miest'. Pre ďalšie info nás prosím kontaktuj.");
+            document.getElementById('presnost').innerHTML = "Presnosť pozície je +/-" + position.coords.accuracy + " m";
+        } else if (position.coords.accuracy > 50) {
+            alert("Pozícia nie je dostatočne presná. Skús načítať polohu ešte raz!\n\nNezabudni povoliť 'satelity GPS' v lokalizačných službách tvojho telefónu.");
+            document.getElementById('presnost').innerHTML = "Presnosť pozície je +/-" + position.coords.accuracy + " m";
+        }
+        else {
+           document.getElementById('lat').value = position.coords.latitude;
+           document.getElementById('lon').value = position.coords.longitude;
+           document.getElementById('presnost').innerHTML = "Presnosť pozície je +/-" + position.coords.accuracy + " m";
+           document.getElementById('accuracy').value = position.coords.accuracy;
+        }
+        
+        };
+
+        function error (err) {
+            console.log('error message');
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(success, error, {enableHighAccuracy: true, maximumAge: 0, timeout:25000});
+        } else {
+            error('Location services must be enabled to use this');
+        }
+
+    };
+
+// jQuery plugin to prevent double submission of forms
+jQuery.fn.preventDoubleSubmission = function() {
+  $(this).on('submit',function(e){
+    var $form = $(this);
+    if ($form.data('submitted') === true) {
+      // Previously submitted - don't submit again
+      e.preventDefault();
+    } else {
+      // Mark it so that the next submit can be ignored
+      $form.data('submitted', true);
+    }
+  });
+ 
+  // Keep chainability
+  return this;
+};
+$('form').preventDoubleSubmission();
+
+
+</script>
+    
+    <div class="control-group">
+    <div class="controls">
+        <select name="category" id="category" required>
+            <option selected="selected" disabled="disabled" value="">Vyber kategóriu</option>
+            <option value="pramen">Prameň</option>
+            <option value="pristresok">Prístrešok</option>
+            <option value="utulna">Útulňa</option>
+            <option value="chata">Chata</option>
+            <option value="potraviny">Potraviny</option>
+            <option value="krcma_jedlo">Krčma/Reštaurácia</option>
+            <option value="posed">Posed</option>
+        </select>
+  </div>
+    </div>
+        
+    <div class="control-group">
+        <div class="controls">
+          <textarea name="name" rows=1 class="input-xlarge" placeholder="Názov miesta (napr.: prameň ch. Ďurková)" required>{{ request.form.name }}</textarea>
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <div class="controls">
+          <textarea name="text" rows=10 class="input-xlarge" placeholder="Doplňujúce info (napr.: Nie je pri značke, treba odbočiť z chaty. Je tam vyšľapaný chodník.)">{{ request.form.text }}</textarea>
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <div class="controls"> 
+           
+             <h5>Pridaj fotku:</h5>
+             <input type="file" name="file" id="fileID"/>
+             
+        </div>
+    </div>
+     
+    <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn btn-success">Pošli miesto</button>
+          alebo <a href="{{ url_for('index') }}">Späť na zoznam</a>
+        </div>
+    </div>
+  </form>
+{% endblock %}

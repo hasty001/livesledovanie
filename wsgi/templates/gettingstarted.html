@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block body %}
+</script>
+
+<div id="akozacat" class="container" style="text-align: justify">
+<h3>Čo ďalej?</h3>
+<h4>Pošli nám email</h4>
+Pošli nám čo najskôr email na adresu <a href="mailto:info@cestasnp.sk" target="_blank">info(zav.)cestasnp.sk</a>,
+aby sme ti zverejnili článok na CesteSNP.sk a pridali baner. Inak si nikto nebude môcť prečítať poslané správy. Určite nám
+pomôže ak nám prezradíš email pod ktorým si sa zaregistroval(a).
+<h4>Nastav si lokalizačné služby a vyskúšaj posielanie správ</h4>
+Kým budeš čakať na odpoveď môžeš si zatiaľ nastaviť svoje zariadenie a vyskúšať poslať prvú správu.
+<br><p>
+Dôležité je nastaviť si vo svojom zariadení "Určovanie polohy na základe satelitov GPS" v nastaveniach telefónu, obrázok ako to môže vyzerať máš dole.
+Nezabudni, že pri načítaní polohy potebuje tvoje zariadenie <b>priamu viditeľnosť na oblohu</b>.<br><br>
+Až to budeš mať môžeš sa pustiť do prvej správy. Choď na stránku <a href="/spravy" target="_blank">Nová správa</a>. Stlač tlačítko "Načítaj z GPS".
+Tvoj prehliadač si zažiada o povolenie načítať polohu (obrázok dole). Po odsúhlasení sa ti zobrazia aktuálne súradnice s informáciou o presnosti.
+Toto môže trvať až 30sekúnd. Za tento čas by malo tvoje zariadenie dodať presnú polohu. Ak sa to nepodarilo zkontroluj si či máš priamu
+viditeľnosť na oblohu a skús to ešte raz.
+</p>
+<p>
+<img src="http://cestasnp.sk/images/sledovanie/Screenshot_2015-04-27-17-37-10.png" width="320"></img>
+<img src="http://cestasnp.sk/images/sledovanie/Screenshot_2015-04-27-17-38-56.png" width="320"></img>
+</p><br>
+Až sa ti načíta poloha s dostatočnou presnosťou vypíš text, na začiatok stačí trebarz "Moja prvá správa" a pošli.<br><br>
+Presmerujeme ťa na prehľad správ, kde je tvoja správa už zobrazená. Skontroluj si polohu na mape a ak si spokojný(á) <b>máme hotovo</b>.
+Ak by nie, stiahni si <a href="http://cestasnp.sk/download/Live_sledovanie_manual.pdf">kompletný návod</a>, kde nájdeš podrobnosti.
+<h4>Pošli link svojim kamarátom</h4>
+Je možné, že už máš vytvorené sledovanie na CestaSNP.sk, v maily nájdeš link. Ten môžeš poslať rodine, kamarátom a známim, aby ťa mohli počas tvojej
+Cesty sledovať a podporiť komentármi.<br><br>
+<p><b>Veľa šťastaia na Ceste hrdinov SNP a ak by si od nás niečo potreboval(a) ozvi sa na info(zav.)cestasnp.sk.</b> Ak máš zájem vytvoriť spolu
+s nami databázu "Dôležitých miest", tak v Menu (3 čiarky vpravo hore) nájdeš "Dôležité miesta" pre pridanie nového miesta.</p>
+<form action="/" method="get" class="display">
+        <label for="pridaj" class="btn btn-success"><i class="icon-ok icon-white"></i> OK</label>
+        <input id="pridaj" type="submit" class="hidden">
+</form>
+</script>
+
+</div>
+
+{% endblock %}
