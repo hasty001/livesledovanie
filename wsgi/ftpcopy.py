@@ -1,6 +1,6 @@
 import os
 import ftplib
-#from PIL import Image
+from PIL import Image
 
 def ftpcopier(filename,source,userId):
     ftp = ftplib.FTP('cestasnp.sk')
@@ -18,7 +18,7 @@ def ftpcopier(filename,source,userId):
         ftp.cwd('/web/images/stories/Ostatne/sledovanie_upload/%s' %folderName)
     
     os.chdir(source)
-    """
+
     try:
         image = Image.open(filename)
         w, h = image.size
@@ -26,7 +26,7 @@ def ftpcopier(filename,source,userId):
         image.save(filename, 'JPEG', quality=80)
     except:
         print("image resize failed")
-    """
+    
 
     myfile = open(filename, 'r')
     ftp.storbinary("STOR " + filename, myfile)
