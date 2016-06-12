@@ -7,7 +7,7 @@ from flask import Blueprint
 from werkzeug import secure_filename
 from flask.ext.login import LoginManager, login_user , logout_user , current_user , login_required
 import hashlib
-from ftpcopy import ftpcopier, ftpdeleter
+from ftpcopy import resize_and_copy_to_cesta_ftp, delete_openshift_img
 from cas import cas
 from cestadb import *
 from places import places
@@ -77,7 +77,7 @@ def delete_sprava(id):
     
     if sprava.lessOne(sprava):
         if sprava.img != 'None':
-            ftpdeleter(sprava.img,g.user.id)
+            delete_openshift_img(sprava.img,g.user.id)
         db.session.delete(sprava)
         db.session.commit()
         flash('Spr%sva bola zmazan%s' %(u"\u00E1",u"\u00E1"))
@@ -149,7 +149,7 @@ def spravy():
             # Move the file form the temporal folder to
             # the upload folder we setup
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            ftpcopier(filename,path,g.user.id)
+            resize_and_copy_to_cesta_ftp(filename,path,g.user.id)
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             # Redirect the user to the uploaded_file route, which
             # will basically show on the browser the uploaded file
@@ -309,7 +309,7 @@ def miesta():
             # Move the file form the temporal folder to
             # the upload folder we setup
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            ftpcopier(filename,app.config['UPLOAD_FOLDER'],'miesta')
+            resize_and_copy_to_cesta_ftp(filename,app.config['UPLOAD_FOLDER'],'miesta')
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             # Redirect the user to the uploaded_file route, which
             # will basically show on the browser the uploaded file
