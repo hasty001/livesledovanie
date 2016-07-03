@@ -34,10 +34,10 @@ def resize_and_copy_to_cesta_ftp(filename,source,userId):
                 #need to calculate h
                 longer_side = w
                 resize_factor = longer_side / out_image_size
-                out_h_size = int(h / resize_factor)
+                out_h_size = h / resize_factor
 
                 #resize
-                image = image.resize((out_image_size, out_h_size), Image.ANTIALIAS)
+                image = image.resize((out_image_size, int(out_h_size)), Image.ANTIALIAS)
                 image.save(filename, 'JPEG', quality=out_image_quality)
             else:
                 #portrait mode
@@ -45,10 +45,10 @@ def resize_and_copy_to_cesta_ftp(filename,source,userId):
                 #need to calculate w
                 longer_side = h
                 resize_factor = longer_side / out_image_size
-                out_w_size = int(w / resize_factor)
+                out_w_size = w / resize_factor
 
                 #resize
-                image = image.resize((out_w_size, out_image_size), Image.ANTIALIAS)
+                image = image.resize((int(out_w_size), out_image_size), Image.ANTIALIAS)
                 image.save(filename, 'JPEG', quality=out_image_quality)
 
     except:
