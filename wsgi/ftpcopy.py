@@ -33,15 +33,15 @@ def resize_and_copy_to_cesta_ftp(filename,source,userId):
                 #landscape mode
                 #resize on w = 1024 (out_image_size)
                 #need to calculate h
-                print("LOG: original w side is %s and h side is %s", %(w,h))
+                print("LOG: original w side is %s and h side is %s") %(w,h)
                 longer_side = w
                 resize_factor = longer_side / out_image_size
                 out_h_size = h / resize_factor
-                print("LOG: h side after division is %s", %out_h_size)
+                print("LOG: h side after division is %s") %out_h_size
                 out_h_size = int(out_h_size)
-                print("LOG: h side after making it INT is %s", %out_h_size)
+                print("LOG: h side after making it INT is %s") %out_h_size
                 #resize
-                print("LOG: resized w side is %s and h side is %s", %(out_image_size,out_h_size))
+                print("LOG: resized w side is %s and h side is %s") %(out_image_size,out_h_size)
                 image = image.resize((out_image_size, out_h_size), Image.ANTIALIAS)
                 image.save(filename, 'JPEG', quality=out_image_quality)
             else:
