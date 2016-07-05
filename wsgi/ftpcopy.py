@@ -51,11 +51,12 @@ def resize_and_copy_to_cesta_ftp(filename,source,userId):
                 #resize h = 1024 (out_image_size)
                 #need to calculate w
                 longer_side = h
-                resize_factor = longer_side / out_image_size
+                resize_factor = longer_side / float(out_image_size)
                 out_w_size = w / resize_factor
+                out_w_size = int(out_w_size)
 
                 #resize
-                image = image.resize((int(out_w_size), out_image_size), Image.ANTIALIAS)
+                image = image.resize((out_w_size, out_image_size), Image.ANTIALIAS)
                 image.save(filename, 'JPEG', quality=out_image_quality)
 
 
