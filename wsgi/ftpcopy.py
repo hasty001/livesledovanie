@@ -35,7 +35,7 @@ def resize_and_copy_to_cesta_ftp(filename,source,userId):
                 #need to calculate h
                 print("LOG: original w side is %s and h side is %s") %(w,h)
                 longer_side = w
-                resize_factor = longer_side / out_image_size
+                resize_factor = longer_side / float(out_image_size)
                 print("LOG: resize factore is %s") %resize_factor
                 out_h_size = h / resize_factor
                 print("LOG: h side after division is %s") %out_h_size
