@@ -33,6 +33,7 @@ def resize_and_copy_to_cesta_ftp(filename,source,userId):
                 #landscape mode
                 #resize on w = 1024 (out_image_size)
                 #need to calculate h
+                print("LOG: image name: %s") %filename
                 print("LOG: original w side is %s and h side is %s") %(w,h)
                 longer_side = w
                 resize_factor = longer_side / float(out_image_size)
