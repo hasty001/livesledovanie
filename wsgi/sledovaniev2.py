@@ -18,6 +18,7 @@ app = Flask(__name__)
 
 app.config['SQLALCHEMY_POOL_RECYCLE'] = 60
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://nova_15182:StopSkurvencom1256@mysql50.websupport.sk:3308/nova_15182?charset=utf8'
+
 app.secret_key = 'foobarbarovic'
 
 db.init_app(app)
@@ -331,10 +332,9 @@ def miesta():
             return redirect(url_for('miesta'))
     return render_template('miesta.html')
 
-
+"""
 if __name__ == '__main__':
     app.run(Debug = True)
 """
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)
-"""

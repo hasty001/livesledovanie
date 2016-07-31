@@ -102,49 +102,6 @@ class Details(db.Model):
         self.email = email
         self.articleID = articleID
 
-"""
-jos_jcomments
-
-`id` int(11) unsigned NOT NULL auto_increment,
-  `parent` int(11) unsigned NOT NULL default '0',
-  `path` varchar(255) NOT NULL default '',
-  `level` tinyint(1) unsigned NOT NULL default '0',
-  `object_id` int(11) unsigned NOT NULL default '0',
-  `object_group` varchar(255) NOT NULL default '',
-  `object_params` text NOT NULL,
-  `lang` varchar(255) NOT NULL default '',
-  `userid` int(11) unsigned NOT NULL default '0',
-  `name` varchar(255) NOT NULL default '',
-  `username` varchar(255) NOT NULL default '',
-  `email` varchar(255) NOT NULL default '',
-  `homepage` varchar(255) NOT NULL default '',
-  `title` varchar(255) NOT NULL default '',
-  `comment` text NOT NULL,
-  `ip` varchar(15) NOT NULL default '',
-  `date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `isgood` smallint(5) unsigned NOT NULL default '0',
-  `ispoor` smallint(5) unsigned NOT NULL default '0',
-  `published` tinyint(1) unsigned NOT NULL default '0',
-  `subscribe` tinyint(1) unsigned NOT NULL default '0',
-  `source` varchar(255) NOT NULL default '',
-  `source_id` int(11) unsigned NOT NULL default '0',
-  `checked_out` int(11) unsigned NOT NULL default '0',
-  `checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
-  `editor` varchar(50) NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  KEY `idx_userid` (`userid`),
-  KEY `idx_source` (`source`),
-  KEY `idx_email` (`email`),
-  KEY `idx_lang` (`lang`),
-  KEY `idx_subscribe` (`subscribe`),
-  KEY `idx_checkout` (`checked_out`),
-  KEY `idx_object` (`object_id`,`object_group`,`published`,`date`),
-  KEY `idx_level` (`level`),
-  KEY `idx_path` (`path`,`level`)
-  
-  test len s: id, object_id, username, comment, date, published
-"""
-
 
 class Jos_jcomments(db.Model):
     __tablename__ = 'jos_jcomments'
