@@ -4,6 +4,7 @@ from flask import Flask, session, request, flash, url_for, redirect, render_temp
 from pymongo import MongoClient
 from bson import json_util
 import json
+import os
 
 places = Blueprint('places', __name__, template_folder='templates')
 
