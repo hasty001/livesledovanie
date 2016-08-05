@@ -323,7 +323,7 @@ def miesta():
             flash('Text is required', 'error')
         else:
             miesto = {
-                'accuracy' : request.form['accuracy'],
+                'accuracy' : int(request.form['accuracy']),
                 'category' : request.form['category'],
                 'name' : request.form['name'],
                 'text' : request.form['text'],
