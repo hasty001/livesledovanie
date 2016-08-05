@@ -311,8 +311,11 @@ def miesta():
             # Move the file form the temporal folder to
             # the upload folder we setup
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            print("LOG img saved to openshift")
             resize_and_copy_to_cesta_ftp(filename,app.config['UPLOAD_FOLDER'],'miesta')
+            print("LOG img copied to ftp")
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            print("LOG img deleted from openshift")
             # Redirect the user to the uploaded_file route, which
             # will basically show on the browser the uploaded file
         else:
@@ -332,10 +335,14 @@ def miesta():
             }
 
             miesto['coordinates'] = (float(request.form['lon']), float(request.form['lat']))
+
+            print("LOG poi json object has been created: \n %s" %miesto)
             try:
+                print("LOG inserting into mongoDB will start")
                 poi.insert_one(miesto)
+                print("LOG inserting into mongoDB done")
             except:
-                print("error saving miesto to mongoDB")
+                print("ERROR error saving miesto to mongoDB")
 
             flash('Miesto bolo ulo%sen%s. %sakujeme.' %(u"\u017E", u"\u00E9", u"\u010E"))
             return redirect(url_for('miesta'))
