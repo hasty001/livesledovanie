@@ -59,7 +59,6 @@ def resize_and_copy_to_cesta_ftp(filename,source,userId):
                 image = image.resize((out_w_size, out_image_size), Image.ANTIALIAS)
                 image.save(filename, 'JPEG', quality=out_image_quality)
 
-
     except:
         print("image resize failed")
 

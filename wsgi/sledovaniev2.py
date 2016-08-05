@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import *
-from flask import Flask, session, request, flash, url_for, redirect, render_template, abort, g, send_from_directory
+from flask import Flask, session, request, flash, url_for, redirect, render_template, abort, g, send_from_directory, jsonify
 from flask import Blueprint
 from werkzeug import secure_filename
 from flask.ext.login import LoginManager, login_user , logout_user , current_user , login_required
@@ -13,6 +13,7 @@ from cestadb import *
 from places import places
 from gettingstarted import gettingstarted
 import uuid
+
 
 app = Flask(__name__)
 
@@ -321,20 +322,29 @@ def miesta():
         elif not request.form['lon']:
             flash('Text is required', 'error')
         else:
-            miesto = Miesta(request.form['lat'], request.form['lon'], request.form['accuracy'], request.form['category'], request.form['name'], request.form['text'], filename)
-            miesto.user_id = g.user.id
-            #sprava.accuracy = request.form['accuracy']
-            # save to DB
-            db.session()    
-            db.session.add(miesto)
-            db.session.commit()
+            miesto = {
+                'accuracy' : request.form['accuracy'],
+                'category' : request.form['category'],
+                'name' : request.form['name'],
+                'text' : request.form['text'],
+                'img_url' : filename,
+                'user_id' : int(g.user.id)
+            }
+
+            miesto['coordinates'] = (float(request.form['lon']), float(request.form['lat']))
+            try:
+                poi.insert_one(miesto)
+            except:
+                print("error saving miesto to mongoDB")
+
             flash('Miesto bolo ulo%sen%s. %sakujeme.' %(u"\u017E", u"\u00E9", u"\u010E"))
             return redirect(url_for('miesta'))
     return render_template('miesta.html')
 
-"""
+
 if __name__ == '__main__':
     app.run(Debug = True)
 """
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)
+"""

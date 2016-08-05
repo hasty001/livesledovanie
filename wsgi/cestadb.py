@@ -3,8 +3,26 @@ from sqlalchemy import *
 from cas import cas
 from datetime import datetime, timedelta
 from flask import Flask
+from pymongo import MongoClient
+import os
 
 db = SQLAlchemy()
+
+#mongoDB for location data
+
+client = MongoClient("mongodb://admin:51dBVLs4ZLpi@%s:%s/" \
+                     %(os.environ['OPENSHIFT_MONGODB_DB_HOST'],os.environ['OPENSHIFT_MONGODB_DB_PORT']))
+mongodb = client.sledovanie
+poi = mongodb.poi
+
+    #
+    #"mongo":        "mongodb://admin:51dBVLs4ZLpi@%s:%s/" \
+    #                       %(os.environ['OPENSHIFT_MONGODB_DB_HOST'],os.environ['OPENSHIFT_MONGODB_DB_PORT'])
+    #
+    #"mongo":        "mongodb://admin:51dBVLs4ZLpi@%s:%s/" %("127.0.0.1","27017")
+
+
+#SQL for others
 
 class Jos_users(db.Model):
     __tablename__ = 'jos_users'
