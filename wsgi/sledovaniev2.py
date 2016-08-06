@@ -324,7 +324,7 @@ def miesta():
         elif not request.form['lon']:
             flash('Text is required', 'error')
         else:
-            print("LOG %s" %datetime.datetime.now())
+            print("LOG %s" % datetime.now())
 
             miesto = {
                 'accuracy': int(float(request.form['accuracy'])),
@@ -333,7 +333,7 @@ def miesta():
                 'text': request.form['text'],
                 'img_url': filename,
                 'user_id': int(g.user.id),
-                'created': datetime.datetime.now()
+                'created': datetime.now()
             }
 
             miesto['coordinates'] = (float(request.form['lon']), float(request.form['lat']))
