@@ -23,7 +23,9 @@ poi = db.poi
     #"mongo":        "mongodb://admin:51dBVLs4ZLpi@%s:%s/" %("127.0.0.1","27017")
 
 @places.route('/ajax/pois', methods=['GET'])
-@login_required
+
+# koli moznosti mat mapu verejne
+#@login_required
 def pois():
     if request.method == 'GET':
         pois = poi.find()

@@ -300,7 +300,7 @@ def comments():
         return redirect(url_for('index'))
 
 @app.route('/miesta', methods=['GET','POST'])
-#@login_required
+@login_required
 def miesta():
     if request.method == 'POST':
         file = request.files['file']
