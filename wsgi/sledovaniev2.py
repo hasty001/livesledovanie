@@ -28,9 +28,9 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 login_manager.login_message = u"Prihl%ss sa pou%sit%sm prihl. %sdajov CestaSNP.sk." %(u"\u00E1", u"\u017E", u"\u00ED", u"\u00FA")
 
-path = '/Users/lcicon/Documents/Openshift/sledovanie/img/'
+#path = '/Users/lcicon/Documents/Openshift/sledovanie/img/'
 #path = '/home/hasty/Developement/web/OpenShift/sledovanie/wsgi/img/'
-#path = os.environ['OPENSHIFT_DATA_DIR'] + '/img'
+path = os.environ['OPENSHIFT_DATA_DIR'] + '/img'
 app.config['UPLOAD_FOLDER'] = path
 app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg', 'gif', 'JPG', 'JPEG'])
 
@@ -353,10 +353,10 @@ def miesta():
             return redirect(url_for('miesta'))
     return render_template('miesta.html')
 
-"""
+
 if __name__ == '__main__':
     app.run(Debug = True)
 """
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)
-
+"""
