@@ -29,7 +29,7 @@ function do_points(){
                 console.log(i);
                 console.log(json[i]);
                 console.log(json[i].coordinates[1]);
-                L.marker([json[i].coordinates[1], json[i].coordinates[0]]).addTo(map).bindPopup("<b>" + json[i].name + "<b><br>" + "<b>Kategória: </b>" + json[i].category + "<br>" + json[i].text);
+                L.marker([json[i].coordinates[1], json[i].coordinates[0]]).addTo(map).bindPopup("<b>" + json[i].name + "</b><br>" + "<b>Kategória: </b>" + json[i].category + "<br>" + json[i].text);
             }
         });
       }

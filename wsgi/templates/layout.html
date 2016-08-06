@@ -52,12 +52,14 @@ input[type="radio"].nie {
                         <li class="active"><a href="/">Všetky správy</a></li>
                 {% if g.user.is_authenticated()%}
                     <li><a href="/spravy">Nová Správa</a></li>
+                    <li><a href="/mapa">Mapa</a></li>
                     <li><a href="/miesta">Dôležité miesta (beta)</a></li>
                     <li><a href="/comments">Komentáre (beta)</a></li>
                     <li><a href="/details_show">O mojej Ceste</a></li> 
                     <li><a href="{{ url_for('logout') }}">Odhlásenie</a></li>
                 {% endif %}
                 {% if not g.user.is_authenticated()%}
+                    <li><a href="/mapa">Mapa</a></li>
                     <li><a href="{{ url_for('login') }}">Prihlásenie</a></li>
                     <li><a href="http://cestasnp.sk/index.php/component/comprofiler/registers" target="_blank">Registrácia</a></li>
                 {% endif %}
