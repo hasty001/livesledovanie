@@ -324,6 +324,8 @@ def miesta():
         elif not request.form['lon']:
             flash('Text is required', 'error')
         else:
+            print("LOG %s" %datetime.datetime.now())
+
             miesto = {
                 'accuracy': int(float(request.form['accuracy'])),
                 'category': request.form['category'],
