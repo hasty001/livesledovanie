@@ -331,11 +331,10 @@ def miesta():
                 'text': request.form['text'],
                 'img_url': filename,
                 'user_id': int(g.user.id),
-                'created': datetime.datetime.now(),
-                'coordinates': (float(request.form['lon']), float(request.form['lat']))
+                'created': datetime.datetime.now()
             }
 
-
+            miesto['coordinates'] = (float(request.form['lon']), float(request.form['lat']))
 
             print("LOG poi json object has been created: \n %s" %miesto)
             try:
