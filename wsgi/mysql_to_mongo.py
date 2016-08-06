@@ -16,7 +16,7 @@ cur.execute("SELECT * FROM miesta;" )
 miesta = cur.fetchall()
 
 for m in miesta:
-    print m.category
+    print m[4]
     """
     miesto = {
                 'accuracy': int(float(m.accuracy)),
