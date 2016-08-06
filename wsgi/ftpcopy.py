@@ -1,6 +1,6 @@
 import os
 import ftplib
-from PIL import Image
+#from PIL import Image
 
 def resize_and_copy_to_cesta_ftp(filename,source,userId):
     #properties

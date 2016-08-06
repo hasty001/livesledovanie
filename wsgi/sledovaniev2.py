@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import *
 from flask import Flask, session, request, flash, url_for, redirect, render_template, abort, g, send_from_directory, jsonify
@@ -28,9 +28,9 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 login_manager.login_message = u"Prihl%ss sa pou%sit%sm prihl. %sdajov CestaSNP.sk." %(u"\u00E1", u"\u017E", u"\u00ED", u"\u00FA")
 
-#path = '/Users/lcicon/Documents/Openshift/sledovanie/img/'
+path = '/Users/lcicon/Documents/Openshift/sledovanie/img/'
 #path = '/home/hasty/Developement/web/OpenShift/sledovanie/wsgi/img/'
-path = os.environ['OPENSHIFT_DATA_DIR'] + '/img'
+#path = os.environ['OPENSHIFT_DATA_DIR'] + '/img'
 app.config['UPLOAD_FOLDER'] = path
 app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg', 'gif', 'JPG', 'JPEG'])
 
@@ -300,7 +300,7 @@ def comments():
         return redirect(url_for('index'))
 
 @app.route('/miesta', methods=['GET','POST'])
-@login_required
+#@login_required
 def miesta():
     if request.method == 'POST':
         file = request.files['file']
@@ -319,21 +319,24 @@ def miesta():
             # will basically show on the browser the uploaded file
         else:
             filename = 'None'
-        if not request.form['lat']:
-            flash('Title is required', 'error')
-        elif not request.form['lon']:
-            flash('Text is required', 'error')
-        else:
-            print("LOG %s" % datetime.now())
 
+        if not request.form['lat']:
+            flash('Suradnice neboli zadane', 'error')
+        elif not request.form['lon']:
+            flash('Suradnice neboli zadane', 'error')
+        elif not request.form['name']:
+            flash('Nazov nie je zadany', 'error')
+        elif not request.form['category']:
+            flash('Kategoria nebola zvolena', 'error')
+        else:
             miesto = {
                 'accuracy': int(float(request.form['accuracy'])),
                 'category': request.form['category'],
                 'name': request.form['name'],
-                'text': request.form['text'],
                 'img_url': filename,
-                'user_id': int(g.user.id),
-                'created': datetime.now()
+                #'user_id': int(g.user.id),
+                'created': datetime.now(),
+                'text': request.form['text']
             }
 
             miesto['coordinates'] = (float(request.form['lon']), float(request.form['lat']))
@@ -350,10 +353,10 @@ def miesta():
             return redirect(url_for('miesta'))
     return render_template('miesta.html')
 
-
+"""
 if __name__ == '__main__':
     app.run(Debug = True)
 """
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)
-"""
+
