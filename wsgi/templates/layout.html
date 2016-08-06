@@ -49,8 +49,9 @@ input[type="radio"].nie {
                 <a class="brand" href="/">LIVE Sledovanie</a>
                 <div class="nav-collapse collapse">
                     <ul class="nav">
-                        <li class="active"><a href="/">Všetky správy</a></li>
+
                 {% if g.user.is_authenticated()%}
+                    <li class="active"><a href="/">Všetky správy</a></li>
                     <li><a href="/spravy">Nová Správa</a></li>
                     <li><a href="/mapa">Mapa</a></li>
                     <li><a href="/miesta">Dôležité miesta (beta)</a></li>
