@@ -23,6 +23,9 @@ cur = db.cursor()
 cur.execute("SELECT * FROM miesta;" )
 miesta = cur.fetchall()
 
+
+# PROBLEM S DIAKRITIKOU
+
 for m in miesta:
 
     miesto = {
