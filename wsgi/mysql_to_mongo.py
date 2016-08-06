@@ -1,8 +1,16 @@
-import os
 import MySQLdb
 from datetime import datetime, timedelta
 import smtplib
 import sys
+from pymongo import MongoClient
+import os
+
+#mongoDB for location data
+
+client = MongoClient("mongodb://admin:51dBVLs4ZLpi@%s:%s/" \
+                           %(os.environ['OPENSHIFT_MONGODB_DB_HOST'],os.environ['OPENSHIFT_MONGODB_DB_PORT']))
+mongodb = client.sledovanie
+poi = mongodb.poi
 
 db = MySQLdb.connect(host="mysql50.websupport.sk", # your host, usually localhost
                      port=3308,
@@ -29,6 +37,8 @@ for m in miesta:
     miesto['coordinates'] = (float(m[2]), float(m[1]))
 
     print miesto
+
+    poi.insert_one(miesto)
 
 
 
