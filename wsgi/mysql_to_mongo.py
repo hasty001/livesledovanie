@@ -22,7 +22,7 @@ for m in miesta:
                 'category': m[4],
                 'name': m[5],
                 'img_url': m[7],
-                'user_id': int(m[9]),
+                'user_id': int(float(m[9])),
                 'created': m[8],
                 'text': m[6]
             }
