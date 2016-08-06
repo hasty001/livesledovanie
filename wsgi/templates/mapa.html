@@ -23,13 +23,13 @@ L.tileLayer('http://tiles.freemap.sk/T/{z}/{x}/{y}', { maxZoom: 18, attribution:
 do_points();
 
 function do_points(){
-        requestURL = "/ajax/pois";
+        requestURL = "https://sledovanie-cestasnp.rhcloud.com/ajax/pois";
         $.getJSON(requestURL, function(json) {
             for (var i in json) {
                 console.log(i);
                 console.log(json[i]);
                 console.log(json[i].coordinates[1]);
-                L.marker([json[i].coordinates[1], json[i].coordinates[0]]).addTo(map).bindPopup("<b>json[i].name</b><br>" + "<b>Kategória: </b>" + json[i].category + "<br>" + json[i].text);
+                L.marker([json[i].coordinates[1], json[i].coordinates[0]]).addTo(map).bindPopup(json[i].name + "<br><b>Kategória: </b>" + json[i].category + "<br>" + json[i].text);
             }
         });
       }
