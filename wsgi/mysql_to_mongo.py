@@ -16,7 +16,21 @@ cur.execute("SELECT * FROM miesta;" )
 miesta = cur.fetchall()
 
 for m in miesta:
-    print m
+    print m.category
+    """
+    miesto = {
+                'accuracy': int(float(m.accuracy)),
+                'category': m.category,
+                'name': m.name,
+                'img_url': m.img,
+                'user_id': m.user_id,
+                'created': m.pub_date,
+                'text': m.text
+            }
+    miesto['coordinates'] = (float(m.lon), float(m.lat))
+    """
+
+
 
 """
 miesto = {
