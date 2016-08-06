@@ -14,7 +14,6 @@ from places import places
 from gettingstarted import gettingstarted
 import uuid
 
-
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_POOL_RECYCLE'] = 60
@@ -326,15 +325,17 @@ def miesta():
             flash('Text is required', 'error')
         else:
             miesto = {
-                'accuracy' : int(float(request.form['accuracy'])),
-                'category' : request.form['category'],
-                'name' : request.form['name'],
-                'text' : request.form['text'],
-                'img_url' : filename,
-                'user_id' : int(g.user.id)
+                'accuracy': int(float(request.form['accuracy'])),
+                'category': request.form['category'],
+                'name': request.form['name'],
+                'text': request.form['text'],
+                'img_url': filename,
+                'user_id': int(g.user.id),
+                'created': datetime.datetime.now(),
+                'coordinates': (float(request.form['lon']), float(request.form['lat']))
             }
 
-            miesto['coordinates'] = (float(request.form['lon']), float(request.form['lat']))
+
 
             print("LOG poi json object has been created: \n %s" %miesto)
             try:
