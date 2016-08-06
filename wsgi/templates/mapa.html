@@ -28,7 +28,7 @@ function do_points(){
             for (var i in json) {
                 console.log(i)
                 console.log(json[i])
-                L.marker([json[i].lat, json[i].lon]).addTo(map).bindPopup("<b>Hello world!</b><br>" + json[i].name);
+                L.marker([json[i].coordinates[1], json[i].coordinates[0]]).addTo(map).bindPopup("<b>Hello world!</b><br>" + json[i].name);
             }
         });
       }
