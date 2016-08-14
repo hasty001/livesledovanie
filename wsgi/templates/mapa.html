@@ -28,11 +28,8 @@ function do_points(){
         requestURL = "https://sledovanie-cestasnp.rhcloud.com/ajax/pois";
         $.getJSON(requestURL, function(json) {
             for (var i in json) {
-                requestICONS = "https://sledovanie-cestasnp.rhcloud.com/ajax/icons/" + json[i].category;
-                $.getJSON(requestICONS, function(icons){
-
-                    L.marker([json[i].coordinates[1], json[i].coordinates[0]], {icon: icons}).addTo(map).bindPopup("<b>" + json[i].name + "</b><br>" + "<b>Kategória: </b>" + json[i].category + "<br>" + json[i].text);
-            });
+                L.marker([json[i].coordinates[1], json[i].coordinates[0]]).addTo(map).bindPopup("<b>" + json[i].name + "</b><br>" + "<b>Kategória: </b>" + json[i].category + "<br>" + json[i].text);
+            }
         });
       }
 
