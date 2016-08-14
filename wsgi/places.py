@@ -22,8 +22,6 @@ poi = db.poi
     #                       %(os.environ['OPENSHIFT_MONGODB_DB_HOST'],os.environ['OPENSHIFT_MONGODB_DB_PORT'])
     #"mongo":        "mongodb://admin:51dBVLs4ZLpi@%s:%s/" %("127.0.0.1","27017")
 
-@places.route('/ajax/pois', methods=['GET'])
-
 
 @places.route('/mapa', methods=['GET'])
 #@login_required
@@ -34,6 +32,7 @@ def mapa():
 
 # koli moznosti mat mapu verejne
 #@login_required
+@places.route('/ajax/pois', methods=['GET'])
 def pois():
     if request.method == 'GET':
         pois = poi.find()

@@ -22,8 +22,6 @@ L.tileLayer('http://tiles.freemap.sk/T/{z}/{x}/{y}', { maxZoom: 18, attribution:
 
 do_points();
 
-
-
 function do_points(){
         requestURL = "https://sledovanie-cestasnp.rhcloud.com/ajax/pois";
         $.getJSON(requestURL, function(json) {
