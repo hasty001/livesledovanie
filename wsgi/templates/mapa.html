@@ -27,9 +27,12 @@ function do_points(){
             iconAnchor: [22, 94],
             popupAnchor: [-3, -76]
         });
+
         requestURL = "/ajax/pois";
+        
         $.getJSON(requestURL, function(json) {
             for (var i in json) {
+                console.log(json[i].category);
                 switch (json[i].category) {
                     case "pramen":
                         myIcon["iconUrl"] = "http://cestasnp.sk/images/mapa/watter.png";
@@ -40,6 +43,9 @@ function do_points(){
                     default:
                         myIcon["iconUrl"] = "http://cestasnp.sk/images/mapa/hut.png";
                 }
+
+                console.log(myIcon);
+
                 L.marker([json[i].coordinates[1], json[i].coordinates[0]], {icon: myIcon}).addTo(map).bindPopup("<b>" + json[i].name + "</b><br>" + "<b>Kategória: </b>" + json[i].category + "<br>" + json[i].text);
             }
         });
