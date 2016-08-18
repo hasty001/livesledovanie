@@ -46,12 +46,12 @@ def pois():
 def icons(category):
     if request.method == 'GET':
         icons_to_png = {
-            'pramen': 'http://cestasnp.sk/web/images/mapa/watter.png',
-            'pristresok': 'http://cestasnp.sk/web/images/mapa/hut.png',
-            'utulna': 'http://cestasnp.sk/web/images/mapa/hut.png',
-            'chata': 'http://cestasnp.sk/web/images/mapa/cottage.png',
-            'potraviny': 'http://cestasnp.sk/web/images/mapa/grocery.png',
-            'krcma_jedlo': 'http://cestasnp.sk/web/images/mapa/nutrition.png'
+            'pramen': 'http://cestasnp.sk/images/mapa/watter.png',
+            'pristresok': 'http://cestasnp.sk/images/mapa/hut.png',
+            'utulna': 'http://cestasnp.sk/images/mapa/hut.png',
+            'chata': 'http://cestasnp.sk/images/mapa/cottage.png',
+            'potraviny': 'http://cestasnp.sk/images/mapa/grocery.png',
+            'krcma_jedlo': 'http://cestasnp.sk/images/mapa/nutrition.png'
         }
 
         icon = {
