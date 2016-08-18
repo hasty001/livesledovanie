@@ -34,6 +34,7 @@ function do_points(){
         $.getJSON(requestURL, function(json) {
             for (var i in json) {
                 console.log(json[i].category);
+                console.log(myIcon);
                 switch (json[i].category) {
                     case "pramen":
                         myIcon[iconUrl] = "http://cestasnp.sk/images/mapa/watter.png";
