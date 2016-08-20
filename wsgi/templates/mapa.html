@@ -26,15 +26,13 @@ function do_points(){
   var myIcon = {
       iconUrl: 'http://cestasnp.sk/images/mapa/grocery.png',
       iconAnchor: [14, 32],
-      popupAnchor: [-3, -76]
+      popupAnchor: [3, -20]
   };
 
         requestURL = "/ajax/pois";
 
         $.getJSON(requestURL, function(json) {
             for (var i in json) {
-                console.log(json[i].category);
-                console.log(myIcon);
                 switch (json[i].category) {
                     case "pramen":
                         myIcon.iconUrl = "/static/img/watter.png";
@@ -58,7 +56,6 @@ function do_points(){
                         myIcon.iconUrl = "/static/img/pin.png";
                 }
                 var leafIcon = L.icon(myIcon);
-                console.log(leafIcon);
                 <!-- , {icon: leafIcon} -->
                 L.marker([json[i].coordinates[1], json[i].coordinates[0]], {icon: leafIcon}).addTo(map).bindPopup("<b>" + json[i].name + "</b><br>" + json[i].text);
             }
