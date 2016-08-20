@@ -1,12 +1,13 @@
 from flask import Blueprint, jsonify
 from flask.ext.login import LoginManager, login_user , logout_user , current_user , login_required
-from flask import Flask, session, request, flash, url_for, redirect, render_template, abort, g, send_from_directory
+from flask import Flask, session, request, flash, url_for, redirect, render_template, abort, g, send_from_directory, current_app
 from pymongo import MongoClient
 from bson import json_util
 import json
 import os
 from cestadb import *
 from ftpcopy import resize_and_copy_to_cesta_ftp
+from functools import wraps
 
 
 places = Blueprint('places', __name__, template_folder='templates')
@@ -15,12 +16,26 @@ places = Blueprint('places', __name__, template_folder='templates')
 client = MongoClient("mongodb://admin:51dBVLs4ZLpi@%s:%s/" \
                            %(os.environ['OPENSHIFT_MONGODB_DB_HOST'],os.environ['OPENSHIFT_MONGODB_DB_PORT']))
 db = client.sledovanie
+
 poi = db.poi
 """
     #
     #"mongo":        "mongodb://admin:51dBVLs4ZLpi@%s:%s/" \
     #                       %(os.environ['OPENSHIFT_MONGODB_DB_HOST'],os.environ['OPENSHIFT_MONGODB_DB_PORT'])
     #"mongo":        "mongodb://admin:51dBVLs4ZLpi@%s:%s/" %("127.0.0.1","27017")
+
+
+def support_jsonp(f):
+    """Wraps JSONified output for JSONP"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        callback = request.args.get('callback', False)
+        if callback:
+            content = str(callback) + '(' + str(f().data) + ')'
+            return current_app.response_class(content, mimetype='application/json')
+        else:
+            return f(*args, **kwargs)
+    return decorated_function
 
 
 @places.route('/mapa', methods=['GET'])
@@ -41,29 +56,11 @@ def pois():
 
 
 
-@places.route('/ajax/pois/icons/<category>', methods=['GET'])
+@places.route('/ajax/pois/onroute', methods=['GET'])
 #@login_required
-def icons(category):
+@support_jsonp
+def icons():
     if request.method == 'GET':
-        icons_to_png = {
-            'pramen': 'http://cestasnp.sk/images/mapa/watter.png',
-            'pristresok': 'http://cestasnp.sk/images/mapa/hut.png',
-            'utulna': 'http://cestasnp.sk/images/mapa/hut.png',
-            'chata': 'http://cestasnp.sk/images/mapa/cottage.png',
-            'potraviny': 'http://cestasnp.sk/images/mapa/grocery.png',
-            'krcma_jedlo': 'http://cestasnp.sk/images/mapa/nutrition.png'
-        }
-
-        icon = {
-            'iconUrl': icons_to_png[category],
-            #'iconRetinaUrl': 'my-icon@2x.png',
-            #'iconSize': [38, 95],
-            'iconAnchor': [22, 94],
-            'popupAnchor': [-3, -76],
-            #shadowUrl: 'my-icon-shadow.png',
-            #shadowRetinaUrl: 'my-icon-shadow@2x.png',
-            #shadowSize: [68, 95],
-            #shadowAnchor: [22, 94]
-        }
-
-        return jsonify(icon)
+        pois = poi.find()
+        pois = str(json.dumps(list(pois),default=json_util.default))
+        return pois
