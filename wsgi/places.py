@@ -63,4 +63,4 @@ def icons():
     if request.method == 'GET':
         pois = poi.find()
         pois = str(json.dumps(list(pois),default=json_util.default))
-        return pois
+        return jsonify(data=pois)
