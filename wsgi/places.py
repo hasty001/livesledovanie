@@ -61,6 +61,10 @@ def pois():
 @support_jsonp
 def icons():
     if request.method == 'GET':
-        pois = poi.find()
-        pois = str(json.dumps(list(pois),default=json_util.default))
+        pois = {
+            "category": "utulna",
+            "name": "test",
+            "text": "Drevena zrubovita stavba vo velmi dobrom stave.",
+            "coordinates": [19.0082, 48.7675]
+        }
         return jsonify(data=pois)
