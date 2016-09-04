@@ -8,6 +8,7 @@ import os
 from cestadb import *
 from ftpcopy import resize_and_copy_to_cesta_ftp
 from functools import wraps
+from datetime import datetime
 
 
 places = Blueprint('places', __name__, template_folder='templates')
@@ -81,7 +82,7 @@ def icons():
 
                     #print(message.text)
                     json_message = {
-                        "date": message.pub_date,
+                        "date":  message.pub_date.strftime('%d.%m.%Y %H:%M:%S'),
                         "group": group_name,
                          "coordinates": [message.lon, message.lat],
                         "text": message.text
@@ -92,5 +93,12 @@ def icons():
 
                 except:
                     print("user has no messages")
+
+        test_message = {
+                        "date": "2015-12-23",
+                        "group": "Test",
+                         "coordinates": ["18.02", "49.09"],
+                        "text": "boli isle dosli a pijeme pivo"
+                    }
 
         return jsonify(data=all_active_messages)
