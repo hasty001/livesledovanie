@@ -61,10 +61,35 @@ def pois():
 @support_jsonp
 def icons():
     if request.method == 'GET':
-        pois = {
-            "category": "utulna",
-            "name": "test",
-            "text": "Drevena zrubovita stavba vo velmi dobrom stave.",
-            "coordinates": [19.0082, 48.7675]
-        }
-        return jsonify(data=pois)
+        #find ids of current travelers in MySQL - details
+        all_detail_ids = Details.query.with_entities(Details.user_id, Details.meno).filter_by(end_date='0000-00-00 00:00:00')
+        all_active_messages =[]
+        #for each id query jos_article for article ID
+        for detail_id in all_detail_ids:
+
+            user_id = int(detail_id.user_id)
+            group_name = detail_id.meno
+            print(user_id)
+            #get last messages of travelers based on results from
+            #ugly way having many queries to mysql :( spravy=Sprava.query.filter_by(user_id = g.user.id).order_by(Sprava.pub_date.desc()).all()
+            if user_id == 62 or user_id == 64 or user_id == 287 or user_id == 304:
+                #do nothing testing id
+                print('testing ID')
+            else:
+                try:
+                    message = Sprava.query.with_entities(Sprava.text, Sprava.pub_date).filter_by(user_id=user_id).order_by(Sprava.pub_date.desc()).first()
+
+                    #print(message.text)
+                    json_message = {
+                        "date": message.pub_date,
+                        "group": group_name,
+                        "text": message.text
+                    }
+
+                    all_active_messages.append(json_message)
+                    #print jsonify(json_message)
+
+                except:
+                    print("user has no messages")
+
+        return jsonify(data=all_active_messages)
