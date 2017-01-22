@@ -5,8 +5,8 @@ from PIL import Image
 def resize_and_copy_to_cesta_ftp(filename,source,userId):
     #properties
     ftp = ftplib.FTP('cestasnp.sk')
-    ftp.login("cestasnp.sk",'kockovo1256')
-    ftp.cwd('/web/images/stories/Ostatne/sledovanie_upload')
+    ftp.login("sledovanie_app.cestasnp.sk",'2DMzCZjvoGcdkpXseRAijfdD')
+    ##### ucet sledovanie_app.cestasnp.sk ma pristup len k: ftp.cwd('/web/images/stories/Ostatne/sledovanie_upload')
     #image size and quality of output if resize is needed
     out_image_size = 1024
     out_image_quality = 80
@@ -16,10 +16,10 @@ def resize_and_copy_to_cesta_ftp(filename,source,userId):
     except:
         folderName = userId
     if folderName in ftp.nlst():
-        ftp.cwd('/web/images/stories/Ostatne/sledovanie_upload/%s' %folderName)       
+        ftp.cwd('%s' %folderName)
     else:
         ftp.mkd(str(folderName))
-        ftp.cwd('/web/images/stories/Ostatne/sledovanie_upload/%s' %folderName)
+        ftp.cwd('%s' %folderName)
     
     os.chdir(source)
 
@@ -71,9 +71,9 @@ def resize_and_copy_to_cesta_ftp(filename,source,userId):
 
 def delete_openshift_img(filename,userId):
     ftp = ftplib.FTP('cestasnp.sk')
-    ftp.login("cestasnp.sk",'kockovo1256')
-    ftp.cwd('/web/images/stories/Ostatne/sledovanie_upload') 
-    ftp.cwd('/web/images/stories/Ostatne/sledovanie_upload/%s' %userId)
+    ftp.login("sledovanie_app.cestasnp.sk",'2DMzCZjvoGcdkpXseRAijfdD')
+    #ftp.cwd('/web/images/stories/Ostatne/sledovanie_upload')
+    ftp.cwd('%s' %userId)
     
     ftp.delete('%s' %filename)
     ftp.quit()
