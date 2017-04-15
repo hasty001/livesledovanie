@@ -73,8 +73,8 @@ def icons():
             print(user_id)
             #get last messages of travelers based on results from
             #ugly way having many queries to mysql :( spravy=Sprava.query.filter_by(user_id = g.user.id).order_by(Sprava.pub_date.desc()).all()
-            if user_id == 62 or user_id == 64 or user_id == 287 or user_id == 304:
-                #do nothing testing id
+            if user_id == 62 or user_id == 287 or user_id == 304: #hatsy je or user_id == 64
+                #do nothing testing ids
                 print('testing ID')
             else:
                 try:
