@@ -197,7 +197,43 @@ def login():
             db.session.add(user)
             db.session.commit()
 
-            return redirect(url_for('login'))
+            print "kopia bola uzlozena uzivatela do Jos_users, %s" % user
+            print "skusam prihlasit noveho usera"
+
+            try:
+                saved_password = Jos_users.query.filter_by(username=username).first()
+                print "robim query na Jos_users s username '%s'" % username
+
+            except:
+                print " query na Jos_users skoncila s chybou"
+                flash('hjustne mame problem 1')
+                return redirect(url_for('login'))
+
+            print "hladam heslo v saved_password"
+            saved_password = saved_password.password
+            new_password_to_check = saved_password
+
+            print new_password_to_check
+
+            new_password_ok = phpass.PasswordHash()
+            new_password_ok = new_password_ok.check_password(pw=password, stored_hash=new_password_to_check)
+            print "new password for new wordpress users is '%s'" % new_password_ok
+
+            if new_password_ok == False:
+                flash('U%s%svate%ssk%s meno alebo heslo nie je spr%svne' % (
+                    u"\u017E", u"\u00ED", u"\u013E", u"\u00E9", u"\u00E1"))
+                return redirect(url_for('login'))
+
+            print registered_user
+            login_user(registered_user, remember=True)
+
+            usersId = Details.query.filter_by(user_id=registered_user.id).first()
+            try:
+                usersId = usersId.meno
+            except:
+                return redirect(url_for('details'))
+            # flash('uzivatel s menom %s uz vyplnil detaily'  %usersId)
+            return redirect(request.args.get('next') or url_for('index'))
 
         except:
             print " query na Ippmgpusers skoncila bez uzivatela"
