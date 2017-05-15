@@ -12,7 +12,7 @@ db = SQLAlchemy()
 #mongoDB for location data
 
 client = MongoClient("mongodb://admin:51dBVLs4ZLpi@%s:%s/" \
-                     %(os.environ['OPENSHIFT_MONGODB_DB_HOST'],os.environ['OPENSHIFT_MONGODB_DB_PORT'])
+                     %(os.environ['OPENSHIFT_MONGODB_DB_HOST'],os.environ['OPENSHIFT_MONGODB_DB_PORT']))
 mongodb = client.sledovanie
 poi = mongodb.poi
 
