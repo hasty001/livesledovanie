@@ -13,11 +13,25 @@ from cestadb import *
 from places import places
 from gettingstarted import gettingstarted
 import uuid
+import phpass
+
+db_con = mysql.connector.connect(
+    user = 'k72ny9v0yxb0',
+    password = 'gqnkzd22wzlk',
+    host = 'mariadb101.websupport.sk',
+    port = '3312',
+    database = 'k72ny9v0yxb0'
+)
+
 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_POOL_RECYCLE'] = 60
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://nova_15182:StopSkurvencom1256@mysql50.websupport.sk:3308/nova_15182?charset=utf8'
+app.config['SQLALCHEMY_BINDS'] = {
+    'db1': app.config['SQLALCHEMY_DATABASE_URI'],
+    'db2': 'mysql://k72ny9v0yxb0:gqnkzd22wzlk@mariadb101.websupport.sk:3312'
+}
 
 app.secret_key = 'foobarbarovic'
 
@@ -28,9 +42,9 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 login_manager.login_message = u"Prihl%ss sa pou%sit%sm prihl. %sdajov CestaSNP.sk." %(u"\u00E1", u"\u017E", u"\u00ED", u"\u00FA")
 
-#path = '/Users/lcicon/Documents/Openshift/sledovanie/img/'
+path = '/Users/lcicon/Documents/Openshift/sledovanie/img/'
 #path = '/home/hasty/Developement/web/OpenShift/sledovanie/wsgi/img/'
-path = os.environ['OPENSHIFT_DATA_DIR'] + '/img'
+#path = os.environ['OPENSHIFT_DATA_DIR'] + '/img'
 app.config['UPLOAD_FOLDER'] = path
 app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg', 'gif', 'JPG', 'JPEG'])
 
@@ -39,9 +53,11 @@ def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
+
 @login_manager.user_loader
 def load_user(id):
     return Jos_users.query.get(int(id))
+
 
 @app.before_request
 def before_request():
@@ -95,37 +111,102 @@ def login():
     
     try:
         saved_password = Jos_users.query.filter_by(username=username).first()
+        print "robim query na Jos_users s username '%s'" %username
+
+
     except:
+        print " query na Jos_users skoncila s chybou"
         flash('hjustne mame problem 1')
         return redirect(url_for('login'))
+
     registered_user = saved_password
         
     try:
+        print "hladam heslo v saved_password"
         saved_password = saved_password.password
-    except:
-        flash('U%s%svate%ssk%s meno alebo heslo nie je spr%svne' %(u"\u017E", u"\u00ED", u"\u013E", u"\u00E9", u"\u00E1") )
-        return redirect(url_for('login'))
-    
-    list_of_password = saved_password.split(':')
-    saved_password = list_of_password[0]
-    salt = list_of_password[1]
-    # check the password
-    pwhash = hashlib.md5()
-    pwhash.update(password)
-    pwhash.update(salt)
-        
-    if pwhash.hexdigest() != saved_password:
-        flash('U%s%svate%ssk%s meno alebo heslo nie je spr%svne' %(u"\u017E", u"\u00ED", u"\u013E", u"\u00E9", u"\u00E1") )
-        return redirect(url_for('login'))
-    login_user(registered_user, remember=True)
+        new_password_to_check = saved_password
 
-    usersId = Details.query.filter_by(user_id=registered_user.id).first()
-    try:
-        usersId = usersId.meno
+        print new_password_to_check
+
+        old_password_ok = False
+        new_password_ok = False
+
+        try:
+            list_of_password = saved_password.split(':')
+            saved_password = list_of_password[0]
+            salt = list_of_password[1]
+            # check the password
+            pwhash = hashlib.md5()
+            pwhash.update(password)
+            pwhash.update(salt)
+
+            if pwhash.hexdigest() == saved_password:
+                old_password_ok = True
+                print "old password fro old joomla users is '%s'" %old_password_ok
+        except:
+            new_password_ok = phpass.PasswordHash()
+            new_password_ok = new_password_ok.check_password(pw=password, stored_hash=new_password_to_check)
+            print "new password for new wordpress users is '%s'" % new_password_ok
+
+
+        if old_password_ok == False and new_password_ok == False:
+            flash('U%s%svate%ssk%s meno alebo heslo nie je spr%svne' % (
+            u"\u017E", u"\u00ED", u"\u013E", u"\u00E9", u"\u00E1"))
+            return redirect(url_for('login'))
+
+        print registered_user
+        login_user(registered_user, remember=True)
+
+        usersId = Details.query.filter_by(user_id=registered_user.id).first()
+        try:
+            usersId = usersId.meno
+        except:
+            return redirect(url_for('details'))
+        # flash('uzivatel s menom %s uz vyplnil detaily'  %usersId)
+        return redirect(request.args.get('next') or url_for('index'))
+
     except:
-        return redirect(url_for('details'))
-    #flash('uzivatel s menom %s uz vyplnil detaily'  %usersId)
-    return redirect(request.args.get('next') or url_for('index'))
+
+        try:
+            print "skusam najst uzivatela v Ippmgpusers"
+
+            cursor5= db_con.cursor()
+            query = ("SELECT id, user_login, user_pass, user_email FROM ippmgpusers WHERE 1")
+
+            print "idem vykonat query na mysql"
+            cursor5.execute(query)
+
+            print cursor5
+
+            for abcd, user_login, user_pass, user_email in cursor5:
+                if user_login == username:
+                    heslo_db = user_pass
+                    email = user_email
+                    print "uzivatel '%s' sa nasiel v ippmgpusers" %username
+
+            cursor5.close()
+            db_con.close()
+
+            print "uzivatel sa nasiel v ippmgpusers. Vyrabam kopiu uivatela"
+
+            user = Jos_users(name=username, username=username, email=email, password=heslo_db)
+
+            print "ukladam kopiu uzivatela do Jos_users, %s" %user
+
+            db.session()
+            db.session.add(user)
+            db.session.commit()
+
+            return redirect(url_for('login'))
+
+        except:
+            print " query na Ippmgpusers skoncila bez uzivatela"
+            flash('U%s%svate%ssk%s meno alebo heslo nie je spr%svne' % (
+                u"\u017E", u"\u00ED", u"\u013E", u"\u00E9", u"\u00E1"))
+            flash('U%s%svate%ssk%s meno alebo heslo nie je spr%svne' %(u"\u017E", u"\u00ED", u"\u013E", u"\u00E9", u"\u00E1") )
+            return redirect(url_for('login'))
+    
+
 
 @app.route('/logout')
 @login_required
@@ -216,6 +297,7 @@ def details():
 @app.route('/details_show', methods=['GET'])
 @login_required
 def details_show():
+    print "g.user.id na view s nazvom details_show je:" + g.user.id
     detail = Details.query.filter_by(user_id=g.user.id).first()
     if detail == None:        
         return redirect(url_for('details'))
@@ -353,10 +435,10 @@ def miesta():
             return redirect(url_for('miesta'))
     return render_template('miesta.html')
 
-
+"""
 if __name__ == '__main__':
-    app.run(Debug = True)
+    app.run(debug = False)
 """
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)
-"""
+
