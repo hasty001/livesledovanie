@@ -227,8 +227,8 @@ def login():
             print registered_user
             login_user(registered_user, remember=True)
 
-            usersId = Details.query.filter_by(user_id=registered_user.id).first()
             try:
+                usersId = Details.query.filter_by(user_id=registered_user.id).first()
                 usersId = usersId.meno
             except:
                 return redirect(url_for('details'))
