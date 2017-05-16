@@ -15,14 +15,6 @@ from gettingstarted import gettingstarted
 import uuid
 import phpass
 
-db_con = mysql.connector.connect(
-    user = 'k72ny9v0yxb0',
-    password = 'gqnkzd22wzlk',
-    host = 'mariadb101.websupport.sk',
-    port = '3312',
-    database = 'k72ny9v0yxb0'
-)
-
 
 app = Flask(__name__)
 
@@ -169,6 +161,14 @@ def login():
 
         try:
             print "skusam najst uzivatela v Ippmgpusers"
+            print "pripajam sa k DB"
+            db_con = mysql.connector.connect(
+                user='k72ny9v0yxb0',
+                password='gqnkzd22wzlk',
+                host='mariadb101.websupport.sk',
+                port='3312',
+                database='k72ny9v0yxb0'
+            )
 
             cursor5= db_con.cursor()
             query = ("SELECT id, user_login, user_pass, user_email FROM ippmgpusers WHERE 1")
