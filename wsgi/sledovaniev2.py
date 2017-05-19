@@ -333,7 +333,8 @@ def details():
 @app.route('/details_show', methods=['GET'])
 @login_required
 def details_show():
-    print "g.user.id na view s nazvom details_show je:" + g.user.id
+    print "g.user.id na view s nazvom details_show je:"
+    print g.user.id
     detail = Details.query.filter_by(user_id=g.user.id).first()
     if detail == None:        
         return redirect(url_for('details'))
