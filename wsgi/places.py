@@ -78,7 +78,8 @@ def icons():
                 print('testing ID')
             else:
                 try:
-                    message = Sprava.query.with_entities(Sprava.text, Sprava.pub_date, Sprava.lat, Sprava.lon).filter_by(user_id=user_id).order_by(Sprava.pub_date.desc()).first()
+                    #message = Sprava.query.with_entities(Sprava.text, Sprava.pub_date, Sprava.lat, Sprava.lon).filter_by(user_id=user_id).order_by(Sprava.pub_date.desc()).first()
+                    message = Sprava.query.with_entities(Sprava.text, Sprava.pub_date, Sprava.lat, Sprava.lon).filter_by(user_id=user_id).order_by(Sprava.pub_date.desc())
 
                     #print(message.text)
                     json_message = {
