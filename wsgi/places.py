@@ -31,11 +31,14 @@ def support_jsonp(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         callback = request.args.get('callback', False)
+        print "\n"
         if callback:
             content = str(callback) + '(' + str(f().data) + ')'
+            print "content je: %s" % content
             return current_app.response_class(content, mimetype='application/json')
         else:
             return f(*args, **kwargs)
+    print "decorated_function je: %s" %decorated_function
     return decorated_function
 
 
@@ -84,21 +87,50 @@ def icons():
                     json_message = {
                         "date":  message.pub_date.strftime('%d.%m.%Y %H:%M:%S'),
                         "group": group_name,
-                         "coordinates": [message.lon, message.lat],
-                        "text": message.text
+                        "coordinates": [message.lon, message.lat],
+                        "text": message.text,
+                        "user_id":user_id
                     }
 
                     all_active_messages.append(json_message)
                     #print jsonify(json_message)
 
                 except:
-                    print("user has no messages")
-
-        test_message = {
-                        "date": "2015-12-23",
-                        "group": "Test",
-                         "coordinates": ["18.02", "49.09"],
-                        "text": "boli isle dosli a pijeme pivo"
-                    }
+                    print("ERROR: user has no messages")
 
         return jsonify(data=all_active_messages)
+
+
+@places.route('/ajax/pois/usermessages', methods=['GET'])
+#@login_required
+@support_jsonp
+def messages_all(*args, **kwargs):
+    if request.method == 'GET':
+        all_active_messages = []
+        userid = request.args.get('userid')
+        print "hladam meno pre spravy pre uzivatela s userid: %s" % userid
+
+        try:
+            group_name = Details.query.filter_by(user_id=userid).first()
+            group_name = group_name.meno
+            print "meno je %s" %group_name
+        except:
+            group_name = "Skupina bez mena"
+
+        print "hladam vsetky spravy pre uzivatela s userid: %s" %userid
+        try:
+            messages = Sprava.query.with_entities(Sprava.text, Sprava.pub_date, Sprava.lat, Sprava.lon).filter_by(user_id=userid).order_by(Sprava.pub_date.desc()).all()
+
+
+            for one_message in messages:
+                json_message = {
+                    "date":  one_message.pub_date.strftime('%d.%m.%Y %H:%M:%S'),
+                    "group": group_name,
+                    "coordinates": [one_message.lon, one_message.lat],
+                    "text": one_message.text
+                }
+                all_active_messages.append(json_message)
+        except:
+            print("user has no messages")
+
+    return jsonify(data=all_active_messages)
