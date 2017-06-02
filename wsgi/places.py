@@ -119,7 +119,7 @@ def messages_all(*args, **kwargs):
 
         print "hladam vsetky spravy pre uzivatela s userid: %s" %userid
         try:
-            messages = Sprava.query.with_entities(Sprava.text, Sprava.pub_date, Sprava.lat, Sprava.lon).filter_by(user_id=userid).order_by(Sprava.pub_date.desc()).all()
+            messages = Sprava.query.with_entities(Sprava.text, Sprava.img, Sprava.pub_date, Sprava.lat, Sprava.lon).filter_by(user_id=userid).order_by(Sprava.pub_date.desc()).all()
 
 
             for one_message in messages:
@@ -127,7 +127,8 @@ def messages_all(*args, **kwargs):
                     "date":  one_message.pub_date.strftime('%d.%m.%Y %H:%M:%S'),
                     "group": group_name,
                     "coordinates": [one_message.lon, one_message.lat],
-                    "text": one_message.text
+                    "text": one_message.text,
+                    "img": one_message.img
                 }
                 all_active_messages.append(json_message)
         except:
