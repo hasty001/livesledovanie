@@ -128,7 +128,7 @@ def messages_all(*args, **kwargs):
                     "group": group_name,
                     "coordinates": [one_message.lon, one_message.lat],
                     "text": one_message.text,
-                    "img": one_message.img
+                    "img": "images/stories/Ostatne/sledovanie_upload/%s/%s" %(userid, one_message.img)
                 }
                 all_active_messages.append(json_message)
         except:
