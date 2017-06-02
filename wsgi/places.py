@@ -123,12 +123,16 @@ def messages_all(*args, **kwargs):
 
 
             for one_message in messages:
+                if one_message.img is None:
+                    photo = "images/1x1.png"
+                else:
+                    photo = "images/stories/Ostatne/sledovanie_upload/%s/%s" %(userid, one_message.img)
                 json_message = {
                     "date":  one_message.pub_date.strftime('%d.%m.%Y %H:%M:%S'),
                     "group": group_name,
                     "coordinates": [one_message.lon, one_message.lat],
                     "text": one_message.text,
-                    "img": "images/stories/Ostatne/sledovanie_upload/%s/%s" %(userid, one_message.img)
+                    "img": photo
                 }
                 all_active_messages.append(json_message)
         except:
