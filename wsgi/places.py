@@ -81,7 +81,12 @@ def icons():
                 print('testing ID')
             else:
                 try:
-                    message = Sprava.query.with_entities(Sprava.text, Sprava.pub_date, Sprava.lat, Sprava.lon).filter_by(user_id=user_id).order_by(Sprava.pub_date.desc()).first()
+                    message = Sprava.query.with_entities(Sprava.text, Sprava.img, Sprava.pub_date, Sprava.lat, Sprava.lon).filter_by(user_id=user_id).order_by(Sprava.pub_date.desc()).first()
+
+                    if message.img == "None":
+                        photo = "images/1x1.png"
+                    else:
+                        photo = "images/stories/Ostatne/sledovanie_upload/%s/%s" % (userid, one_message.img)
 
                     #print(message.text)
                     json_message = {
@@ -89,7 +94,8 @@ def icons():
                         "group": group_name,
                         "coordinates": [message.lon, message.lat],
                         "text": message.text,
-                        "user_id":user_id
+                        "user_id":user_id,
+                        "img":photo
                     }
 
                     all_active_messages.append(json_message)
