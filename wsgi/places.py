@@ -122,7 +122,7 @@ def messages_all(*args, **kwargs):
             messages = Sprava.query.with_entities(Sprava.text, Sprava.img, Sprava.pub_date, Sprava.lat, Sprava.lon).filter_by(user_id=userid).order_by(Sprava.pub_date.desc()).all()
 
             for one_message in messages:
-                if one_message.img is "None":
+                if one_message.img == "None":
                     photo = "images/1x1.png"
                 else:
                     photo = "images/stories/Ostatne/sledovanie_upload/%s/%s" %(userid, one_message.img)
