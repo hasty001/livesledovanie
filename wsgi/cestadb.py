@@ -130,15 +130,13 @@ class Sprava(db.Model):
     details_id = db.Column(db.Integer, db.ForeignKey('details.id'))
     accuracy = db.Column('accuracy', db.Integer)
     
- 
-    def __init__(self, lat, lon, text, img, accuracy, user_id):
+    def __init__(self, lat, lon, text, img, accuracy):
         self.lat = lat
         self.lon = lon
         self.text = text
         self.img = img
         self.pub_date = cas()
         self.accuracy = accuracy
-        self.user_id = user_id
     
     def lessOne(self, sprava):
         if sprava.pub_date > (datetime.utcnow() + timedelta(hours=1)): #kvoli letnemu casu pridavm k UTC 1hodinu (UTC + 1h)
