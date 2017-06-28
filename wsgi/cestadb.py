@@ -12,7 +12,7 @@ db = SQLAlchemy()
 #mongoDB for location data
 
 client = MongoClient("mongodb://admin:51dBVLs4ZLpi@%s:%s/" \
-                     %(os.environ['OPENSHIFT_MONGODB_DB_HOST'],os.environ['OPENSHIFT_MONGODB_DB_PORT']))
+                     % (os.environ['OPENSHIFT_MONGODB_DB_HOST'],os.environ['OPENSHIFT_MONGODB_DB_PORT']))
 mongodb = client.sledovanie
 poi = mongodb.poi
 
@@ -131,13 +131,14 @@ class Sprava(db.Model):
     accuracy = db.Column('accuracy', db.Integer)
     
  
-    def __init__(self, lat, lon, text, img, accuracy):
+    def __init__(self, lat, lon, text, img, accuracy, user_id):
         self.lat = lat
         self.lon = lon
         self.text = text
         self.img = img
         self.pub_date = cas()
         self.accuracy = accuracy
+        self.user_id = user_id
     
     def lessOne(self, sprava):
         if sprava.pub_date > (datetime.utcnow() + timedelta(hours=1)): #kvoli letnemu casu pridavm k UTC 1hodinu (UTC + 1h)

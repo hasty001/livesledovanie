@@ -10,3 +10,5 @@ wsgi/templates/*.html~
 .openshift/.DS_Store
 .openshift/cron/.DS_Store
 wsgi/.DS_Store
+phpass
+wordpress_usres_poc.py

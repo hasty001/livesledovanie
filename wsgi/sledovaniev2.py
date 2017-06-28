@@ -34,9 +34,9 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 login_manager.login_message = u"Prihl%ss sa pou%sit%sm prihl. %sdajov CestaSNP.sk." %(u"\u00E1", u"\u017E", u"\u00ED", u"\u00FA")
 
-#path = '/Users/lcicon/Documents/Openshift/sledovanie/img/'
+path = '/Users/lcicon/Documents/Openshift/sledovanie/img/'
 #path = '/home/hasty/Developement/web/OpenShift/sledovanie/wsgi/img/'
-path = os.environ['OPENSHIFT_DATA_DIR'] + '/img'
+#path = os.environ['OPENSHIFT_DATA_DIR'] + '/img'
 app.config['UPLOAD_FOLDER'] = path
 app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg', 'gif', 'JPG', 'JPEG'])
 
@@ -313,7 +313,7 @@ def show_or_update(id):
 @app.route('/uploads/<filename>')
 @login_required
 def uploaded_file(filename):
-    return redirect('http://cestasnp.sk/images/stories/Ostatne/sledovanie_upload/%s' %filename)
+    return redirect('https://cestasnp.sk/images/stories/Ostatne/sledovanie_upload/%s' %filename)
 
 @app.route('/details', methods=['GET','POST'])
 @login_required
@@ -473,10 +473,9 @@ def miesta():
     return render_template('miesta.html')
 
 
+"""
 if __name__ == '__main__':
     app.run(debug = False)
 """
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)
-
-"""

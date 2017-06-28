@@ -15,6 +15,7 @@ except IOError:
 #start application
 
 from sledovaniev2 import app as application
+
 """
 #create db
 from sledovanie import *
