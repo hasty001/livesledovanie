@@ -11,18 +11,9 @@ db = SQLAlchemy()
 
 #mongoDB for location data
 
-client = MongoClient("mongodb://admin:51dBVLs4ZLpi@%s:%s/" \
-                     % (os.environ['OPENSHIFT_MONGODB_DB_HOST'],os.environ['OPENSHIFT_MONGODB_DB_PORT']))
+client = MongoClient(os.environ['MONGODB_URI'])
 mongodb = client.sledovanie
 poi = mongodb.poi
-
-    #
-    #"mongo":        "mongodb://admin:51dBVLs4ZLpi@%s:%s/" \
-    #                       %(os.environ['OPENSHIFT_MONGODB_DB_HOST'],os.environ['OPENSHIFT_MONGODB_DB_PORT'])
-    #
-    #"mongo":        "mongodb://admin:51dBVLs4ZLpi@%s:%s/" %("127.0.0.1","27017")
-    #   rhc port-forward -a sledovanie
-
 
 
 #SQL for others
@@ -129,7 +120,7 @@ class Sprava(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('jos_users.id'))
     details_id = db.Column(db.Integer, db.ForeignKey('details.id'))
     accuracy = db.Column('accuracy', db.Integer)
-    
+
     def __init__(self, lat, lon, text, img, accuracy):
         self.lat = lat
         self.lon = lon

@@ -19,13 +19,13 @@ import phpass
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_POOL_RECYCLE'] = 60
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://nova_15182:StopSkurvencom1256@mysql50.websupport.sk:3308/nova_15182?charset=utf8'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['MYSQL_DB']
 app.config['SQLALCHEMY_BINDS'] = {
     'db1': app.config['SQLALCHEMY_DATABASE_URI'],
-    'db2': 'mysql://k72ny9v0yxb0:gqnkzd22wzlk@mariadb101.websupport.sk:3312'
+    'db2': os.environ['WORDPRESS_DB']
 }
 
-app.secret_key = 'foobarbarovic'
+app.secret_key = os.environ['APP_SECRET_KEY']
 
 db.init_app(app)
 
@@ -34,9 +34,9 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 login_manager.login_message = u"Prihl%ss sa pou%sit%sm prihl. %sdajov CestaSNP.sk." %(u"\u00E1", u"\u017E", u"\u00ED", u"\u00FA")
 
-path = '/Users/lcicon/Documents/Openshift/sledovanie/img/'
+#path = '/Users/lcicon/Documents/Openshift/sledovanie/img/'
 #path = '/home/hasty/Developement/web/OpenShift/sledovanie/wsgi/img/'
-#path = os.environ['OPENSHIFT_DATA_DIR'] + '/img'
+path = os.environ['OPENSHIFT_DATA_DIR'] + '/img'
 app.config['UPLOAD_FOLDER'] = path
 app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg', 'gif', 'JPG', 'JPEG'])
 
@@ -291,7 +291,7 @@ def spravy():
             db.session.commit()
             flash('Spr%sva bola ulo%sen%s' %(u"\u00E1", u"\u017E", u"\u00E1"))
             return redirect(url_for('index'))
-    suradnice=Sprava.query.filter_by(user_id = g.user.id).order_by(Sprava.pub_date.desc()).first()
+    suradnice = Sprava.query.filter_by(user_id = g.user.id).order_by(Sprava.pub_date.desc()).first()
     return render_template('spravy.html', suradnice=suradnice)
 
 @app.route('/spravy/<int:id>', methods=['GET','POST'])
@@ -473,9 +473,10 @@ def miesta():
     return render_template('miesta.html')
 
 
-"""
+
 if __name__ == '__main__':
     app.run(debug = False)
 """
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)
+"""

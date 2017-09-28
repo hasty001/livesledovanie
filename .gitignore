@@ -3,6 +3,7 @@
 /sql
 /img
 /.idea
+/db_od_jana
 wsgi/templates/*.html~
 *.py~
 *.pyc
@@ -12,3 +13,4 @@ wsgi/templates/*.html~
 wsgi/.DS_Store
 phpass
 wordpress_usres_poc.py
+pois_from_jano_to_mongo.py

@@ -5,7 +5,7 @@ from PIL import Image
 def resize_and_copy_to_cesta_ftp(filename,source,userId):
     #properties
     ftp = ftplib.FTP('cestasnp.sk')
-    ftp.login("sledovanie_app.cestasnp.sk",'2DMzCZjvoGcdkpXseRAijfdD')
+    ftp.login(os.environ['FTP_LOGIN'],os.environ['FTP_PASSWORD'])
     ##### ucet sledovanie_app.cestasnp.sk ma pristup len k: ftp.cwd('/web/images/stories/Ostatne/sledovanie_upload')
     #image size and quality of output if resize is needed
     out_image_size = 1024
@@ -71,7 +71,7 @@ def resize_and_copy_to_cesta_ftp(filename,source,userId):
 
 def delete_openshift_img(filename,userId):
     ftp = ftplib.FTP('cestasnp.sk')
-    ftp.login("sledovanie_app.cestasnp.sk",'2DMzCZjvoGcdkpXseRAijfdD')
+    ftp.login(os.environ['FTP_LOGIN'], os.environ['FTP_PASSWORD'])
     #ftp.cwd('/web/images/stories/Ostatne/sledovanie_upload')
     ftp.cwd('%s' %userId)
     
