@@ -47,7 +47,7 @@ def sendM(userIds):
         #server.set_debuglevel(1)
         #server.ehlo()
         server.starttls()
-        server.login('info@cestasnp.sk', 'sedlo1256')        
+        server.login(os.environ['EMAIL_LOGIN'], os.environ['EMAIL_PASSWORD'])
         try:
             print 'idem poslat mail'    
             toAdd = [toAdd] + bcc
