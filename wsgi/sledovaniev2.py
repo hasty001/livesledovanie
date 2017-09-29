@@ -36,7 +36,7 @@ login_manager.login_message = u"Prihl%ss sa pou%sit%sm prihl. %sdajov CestaSNP.s
 
 #path = '/Users/lcicon/Documents/Openshift/sledovanie/img/'
 #path = '/home/hasty/Developement/web/OpenShift/sledovanie/wsgi/img/'
-path = os.environ['OPENSHIFT_TMP_DIR'] + '/img'
+path = 'img/'
 app.config['UPLOAD_FOLDER'] = path
 app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg', 'gif', 'JPG', 'JPEG'])
 
