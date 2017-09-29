@@ -472,6 +472,8 @@ def miesta():
             return redirect(url_for('miesta'))
     return render_template('miesta.html')
 
+print "toto je koniec sledovaniev2.py"
+
 
 
 if __name__ == '__main__':

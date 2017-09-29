@@ -9,3 +9,5 @@ gettingstarted = Blueprint('gettingstarted', __name__, template_folder='template
 def akozacat():
     if request.method == 'GET':
         return render_template('gettingstarted.html')
+
+print "toto je koniec getingstarted.py"

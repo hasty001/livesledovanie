@@ -222,3 +222,6 @@ class Miesta(db.Model):
             return False
         else:
             return True
+
+
+print "toto je koniec cestadb.py"

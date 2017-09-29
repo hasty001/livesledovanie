@@ -20,3 +20,5 @@ def cas():
     utc = UTC()
     d = datetime.now(tz=utc)
     return d
+
+print "toto je koniec cas.py"

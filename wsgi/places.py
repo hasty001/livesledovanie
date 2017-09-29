@@ -34,11 +34,9 @@ def support_jsonp(f):
         print "\n"
         if callback:
             content = str(callback) + '(' + str(f().data) + ')'
-            print "content je: %s" % content
             return current_app.response_class(content, mimetype='application/json')
         else:
             return f(*args, **kwargs)
-    print "decorated_function je: %s" %decorated_function
     return decorated_function
 
 
@@ -144,3 +142,5 @@ def messages_all(*args, **kwargs):
             print("user has no messages")
 
     return jsonify(data=all_active_messages)
+
+print "toto je koniec places.py"
