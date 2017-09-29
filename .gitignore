@@ -4,6 +4,8 @@
 /img
 /.idea
 /db_od_jana
+/jobs
+/.openshift
 wsgi/templates/*.html~
 *.py~
 *.pyc
