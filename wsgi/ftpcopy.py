@@ -79,4 +79,6 @@ def delete_openshift_img(filename,userId):
     ftp.quit()
 
 
+print os.environ['FTP_LOGIN']
+print os.environ['FTP_PASSWORD']
 print "toto je koniec ftpcopy.py"

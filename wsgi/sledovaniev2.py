@@ -27,6 +27,11 @@ app.config['SQLALCHEMY_BINDS'] = {
 
 app.secret_key = os.environ['APP_SECRET_KEY']
 
+print os.environ['APP_SECRET_KEY']
+print os.environ['WORDPRESS_DB']
+print os.environ['MYSQL_DB']
+
+
 db.init_app(app)
 
 login_manager = LoginManager()

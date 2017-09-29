@@ -12,8 +12,9 @@ db = SQLAlchemy()
 #mongoDB for location data
 
 client = MongoClient(os.environ['MONGODB_URI'])
-mongodb = client.sledovanie
-poi = mongodb.poi
+print "mongo db uri: %s" %client
+mongodb = client.heroku_v7pt68m8
+poi = mongodb.pois
 
 
 #SQL for others
