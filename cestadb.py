@@ -16,6 +16,7 @@ print "mongo db uri: %s" %client
 mongodb = client.heroku_v7pt68m8
 poi = mongodb.pois
 spravy_mongo = mongodb.traveler_messages
+details_mongo = mongodb.traveler_details
 
 
 #SQL for others

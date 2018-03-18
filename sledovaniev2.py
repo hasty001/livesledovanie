@@ -261,6 +261,7 @@ def logout():
 def new():
     return redirect(url_for('spravy'))
 
+
 @app.route('/spravy', methods=['GET', 'POST'])
 @login_required
 def spravy():
@@ -285,8 +286,13 @@ def spravy():
         elif not request.form['text']:
             flash('Text is required', 'error')
         else:
+            if not request.form['accuracy']:
+                accuracy = None
+            else:
+                accuracy = int(request.form['accuracy'])
             details = Details.query.with_entities(Details.id).filter_by(user_id=g.user.id).first()
-            sprava = Sprava(request.form['lat'], request.form['lon'], request.form['text'], filename, request.form['accuracy'])
+            sprava = Sprava(request.form['lat'], request.form['lon'], request.form['text'], filename,
+                            request.form['accuracy'])
             sprava.user_id = g.user.id
             sprava.details_id = details.id
             #sprava.accuracy = request.form['accuracy']
@@ -294,6 +300,24 @@ def spravy():
             db.session()    
             db.session.add(sprava)
             db.session.commit()
+
+            sprava_json = {
+                             "lat": float(request.form['lat']),
+                             "lon": float(request.form['lon']),
+                             "text": request.form['text'],
+                             "img": filename,
+                             "pub_date": str(cas()).split('+')[0].split('.')[0],
+                             "pub_date_milseconds": "timestamp",
+                             "user_id": int(g.user.id),
+                             "details_id": int(details.id),
+                             "accuracy": accuracy
+            }
+            try:
+                print("LOG inserting od message into mongoDB will start")
+                spravy_mongo.insert_one(sprava_json)
+                print("LOG inserting into mongoDB done")
+            except:
+                print("ERROR error saving sprava to mongoDB")
             flash('Spr%sva bola ulo%sen%s' %(u"\u00E1", u"\u017E", u"\u00E1"))
             return redirect(url_for('index'))
     suradnice = Sprava.query.filter_by(user_id = g.user.id).order_by(Sprava.pub_date.desc()).first()
@@ -333,6 +357,27 @@ def details():
     db.session()    
     db.session.add(detail)
     db.session.commit()
+
+    detail_json = {
+        "meno": request.form['meno'],
+        "text": request.form['text'],
+        "start_date": str(datetime.strptime(request.form['start_date'], "%d.%m.%Y")),
+        "end_date": end_date,
+        "completed": completed,
+        "user_id": int(g.user.id),
+        "start_miesto": request.form['start_miesto'],
+        "number": request.form['number'],
+        "email": 0,
+        "articleID": 0
+    }
+
+    try:
+        print("LOG inserting 'detail' into mongoDB will start")
+        details_mongo.insert_one(detail_json)
+        print("LOG inserting into mongoDB done")
+    except:
+        print("ERROR error saving 'deatil' to mongoDB")
+    flash('Spr%sva bola ulo%sen%s' % (u"\u00E1", u"\u017E", u"\u00E1"))
     return redirect(url_for('gettingstarted.akozacat'))
 
 @app.route('/details_show', methods=['GET'])
@@ -458,7 +503,6 @@ def miesta():
                 'category': request.form['category'],
                 'name': request.form['name'],
                 'img_url': filename,
-                #'user_id': int(g.user.id),
                 'created': datetime.now(),
                 'text': request.form['text']
             }
@@ -476,8 +520,6 @@ def miesta():
             flash('Miesto bolo ulo%sen%s. %sakujeme.' %(u"\u017E", u"\u00E9", u"\u010E"))
             return redirect(url_for('miesta'))
     return render_template('miesta.html')
-
-print "toto je koniec sledovaniev2.py"
 
 
 
