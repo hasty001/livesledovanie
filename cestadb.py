@@ -15,6 +15,7 @@ client = MongoClient(os.environ['MONGODB_URI'])
 print "mongo db uri: %s" %client
 mongodb = client.heroku_v7pt68m8
 poi = mongodb.pois
+spravy_mongo = mongodb.traveler_messages
 
 
 #SQL for others
