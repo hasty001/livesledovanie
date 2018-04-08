@@ -11,9 +11,9 @@ db = SQLAlchemy()
 
 #mongoDB for location data
 
-client = MongoClient(os.environ['MONGODB_URI'])
-print "mongo db uri: %s" %client
-mongodb = client.heroku_v7pt68m8
+client = MongoClient(os.environ['MONGODB_ATLAS_URI'])
+
+mongodb = client.cestasnp
 poi = mongodb.pois
 spravy_mongo = mongodb.traveler_messages
 details_mongo = mongodb.traveler_details
@@ -225,6 +225,3 @@ class Miesta(db.Model):
             return False
         else:
             return True
-
-
-print "toto je koniec cestadb.py"

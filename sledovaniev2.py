@@ -27,10 +27,6 @@ app.config['SQLALCHEMY_BINDS'] = {
 
 app.secret_key = os.environ['APP_SECRET_KEY']
 
-print os.environ['APP_SECRET_KEY']
-print os.environ['WORDPRESS_DB']
-print os.environ['MYSQL_DB']
-
 
 db.init_app(app)
 
@@ -80,6 +76,8 @@ def index():
         flash('Spojenie bolo ukoncene, prihlas sa znovu')
         return redirect(url_for('login'))
 
+
+
 @app.route('/delete/<int:id>', methods=['POST'])
 @login_required
 def delete_sprava(id):
@@ -103,27 +101,26 @@ def delete_sprava(id):
 def login():
     if request.method == 'GET':
         return render_template('login.html')
+
     username = request.form['username']
     password = request.form['password']
     
     try:
         saved_password = Jos_users.query.filter_by(username=username).first()
-        print "robim query na Jos_users s username '%s'" %username
+        print("robim query na Jos_users s username '%s'" %username)
 
 
     except:
-        print " query na Jos_users skoncila s chybou"
+        print(" query na Jos_users skoncila s chybou")
         flash('hjustne mame problem 1')
         return redirect(url_for('login'))
 
     registered_user = saved_password
         
     try:
-        print "hladam heslo v saved_password"
+
         saved_password = saved_password.password
         new_password_to_check = saved_password
-
-        print new_password_to_check
 
         old_password_ok = False
         new_password_ok = False
@@ -139,11 +136,9 @@ def login():
 
             if pwhash.hexdigest() == saved_password:
                 old_password_ok = True
-                print "old password fro old joomla users is '%s'" %old_password_ok
         except:
             new_password_ok = phpass.PasswordHash()
             new_password_ok = new_password_ok.check_password(pw=password, stored_hash=new_password_to_check)
-            print "new password for new wordpress users is '%s'" % new_password_ok
 
 
         if old_password_ok == False and new_password_ok == False:
@@ -151,7 +146,6 @@ def login():
             u"\u017E", u"\u00ED", u"\u013E", u"\u00E9", u"\u00E1"))
             return redirect(url_for('login'))
 
-        print registered_user
         login_user(registered_user, remember=True)
 
         usersId = Details.query.filter_by(user_id=registered_user.id).first()
@@ -165,71 +159,51 @@ def login():
     except:
 
         try:
-            print "skusam najst uzivatela v Ippmgpusers"
-            print "pripajam sa k DB"
-            db_con = mysql.connector.connect(
-                user='k72ny9v0yxb0',
-                password='gqnkzd22wzlk',
-                host='mariadb101.websupport.sk',
-                port='3312',
-                database='k72ny9v0yxb0'
-            )
+            db_con = mysql.connector.connect("mysql://k72ny9v0yxb0:gqnkzd22wzlk@mariadb101.websupport.sk:3312")
+            print("connected to wordpres DB")
 
             cursor5= db_con.cursor()
             query = ("SELECT id, user_login, user_pass, user_email FROM ippmgpusers WHERE 1")
 
-            print "idem vykonat query na mysql"
             cursor5.execute(query)
-
-            print cursor5
 
             for abcd, user_login, user_pass, user_email in cursor5:
                 if user_login == username:
                     heslo_db = user_pass
                     email = user_email
-                    print "uzivatel '%s' sa nasiel v ippmgpusers" %username
+
 
             cursor5.close()
             db_con.close()
 
-            print "uzivatel sa nasiel v ippmgpusers. Vyrabam kopiu uivatela"
 
             user = Jos_users(name=username, username=username, email=email, password=heslo_db)
 
-            print "ukladam kopiu uzivatela do Jos_users, %s" %user
 
             db.session()
             db.session.add(user)
             db.session.commit()
 
-            print "kopia bola uzlozena uzivatela do Jos_users, %s" % user
-            print "skusam prihlasit noveho usera"
 
             try:
                 saved_password = Jos_users.query.filter_by(username=username).first()
-                print "robim query na Jos_users s username '%s'" % username
 
             except:
-                print " query na Jos_users skoncila s chybou"
                 flash('hjustne mame problem 1')
                 return redirect(url_for('login'))
 
-            print "hladam heslo v saved_password"
             saved_password = saved_password.password
             new_password_to_check = saved_password
 
-            print new_password_to_check
 
             new_password_ok = phpass.PasswordHash()
             new_password_ok = new_password_ok.check_password(pw=password, stored_hash=new_password_to_check)
-            print "new password for new wordpress users is '%s'" % new_password_ok
 
             if new_password_ok == False:
                 flash('U%s%svate%ssk%s meno alebo heslo nie je spr%svne' % (
                     u"\u017E", u"\u00ED", u"\u013E", u"\u00E9", u"\u00E1"))
                 return redirect(url_for('login'))
 
-            print registered_user
             login_user(registered_user, remember=True)
 
             try:
@@ -241,12 +215,10 @@ def login():
             return redirect(request.args.get('next') or url_for('index'))
 
         except:
-            print " query na Ippmgpusers skoncila bez uzivatela"
             flash('U%s%svate%ssk%s meno alebo heslo nie je spr%svne' % (
                 u"\u017E", u"\u00ED", u"\u013E", u"\u00E9", u"\u00E1"))
             flash('U%s%svate%ssk%s meno alebo heslo nie je spr%svne' %(u"\u017E", u"\u00ED", u"\u013E", u"\u00E9", u"\u00E1") )
             return redirect(url_for('login'))
-    
 
 
 @app.route('/logout')
@@ -383,8 +355,6 @@ def details():
 @app.route('/details_show', methods=['GET'])
 @login_required
 def details_show():
-    print "g.user.id na view s nazvom details_show je:"
-    print g.user.id
     detail = Details.query.filter_by(user_id=g.user.id).first()
     if detail == None:        
         return redirect(url_for('details'))

@@ -13,18 +13,6 @@ from datetime import datetime
 
 places = Blueprint('places', __name__, template_folder='templates')
 
-"""
-client = MongoClient("mongodb://admin:51dBVLs4ZLpi@%s:%s/" \
-                           %(os.environ['OPENSHIFT_MONGODB_DB_HOST'],os.environ['OPENSHIFT_MONGODB_DB_PORT']))
-db = client.sledovanie
-
-poi = db.poi
-"""
-    #
-    #"mongo":        "mongodb://admin:51dBVLs4ZLpi@%s:%s/" \
-    #                       %(os.environ['OPENSHIFT_MONGODB_DB_HOST'],os.environ['OPENSHIFT_MONGODB_DB_PORT'])
-    #"mongo":        "mongodb://admin:51dBVLs4ZLpi@%s:%s/" %("127.0.0.1","27017")
-
 
 def support_jsonp(f):
     """Wraps JSONified output for JSONP"""
@@ -97,7 +85,7 @@ def icons():
                     }
 
                     all_active_messages.append(json_message)
-                    #print jsonify(json_message)
+
 
                 except:
                     print("ERROR: user has no messages")
@@ -112,7 +100,6 @@ def messages_all(*args, **kwargs):
     if request.method == 'GET':
         all_active_messages = []
         userid = request.args.get('userid')
-        print "hladam meno pre spravy pre uzivatela s userid: %s" % userid
 
         try:
             group_name = Details.query.filter_by(user_id=userid).first()
@@ -121,7 +108,6 @@ def messages_all(*args, **kwargs):
         except:
             group_name = "Skupina bez mena"
 
-        print "hladam vsetky spravy pre uzivatela s userid: %s" %userid
         try:
             messages = Sprava.query.with_entities(Sprava.text, Sprava.img, Sprava.pub_date, Sprava.lat, Sprava.lon).filter_by(user_id=userid).order_by(Sprava.pub_date.desc()).all()
 
@@ -142,5 +128,3 @@ def messages_all(*args, **kwargs):
             print("user has no messages")
 
     return jsonify(data=all_active_messages)
-
-print "toto je koniec places.py"
