@@ -11,6 +11,7 @@ from ftpcopy import resize_and_copy_to_cesta_ftp, delete_openshift_img
 from cas import cas
 from cestadb import *
 from places import places
+from details import details
 from gettingstarted import gettingstarted
 import uuid
 import phpass
@@ -64,6 +65,7 @@ def detailsExist(datils):
 
 #zacinaju views
 app.register_blueprint(places)
+app.register_blueprint(details)
 app.register_blueprint(gettingstarted)
 
 @app.route('/',methods=['GET'])
@@ -292,6 +294,8 @@ def spravy():
                 print("ERROR error saving sprava to mongoDB")
             flash('Spr%sva bola ulo%sen%s' %(u"\u00E1", u"\u017E", u"\u00E1"))
             return redirect(url_for('index'))
+
+
     suradnice = Sprava.query.filter_by(user_id = g.user.id).order_by(Sprava.pub_date.desc()).first()
     return render_template('spravy.html', suradnice=suradnice)
 
@@ -316,115 +320,6 @@ def show_or_update(id):
 def uploaded_file(filename):
     return redirect('https://cestasnp.sk/images/stories/Ostatne/sledovanie_upload/%s' %filename)
 
-@app.route('/details', methods=['GET','POST'])
-@login_required
-def details():
-    if request.method == 'GET':
-        return render_template('details.html')
-    end_date='NULL'
-    #user_id = g.user
-    completed = 0
-    #detail = Details(request.form['meno'], request.form['text'], datetime.strptime(request.form['start_date'], "%d.%m.%Y"), datetime.strptime(request.form['end_date'], "%d.%m.%Y"), completed, g.user.id, request.form['start_miesto'], request.form['number'], 0, 0)detail = Details(request.form['meno'], request.form['text'], datetime.strptime(request.form['start_date'], "%d.%m.%Y"), datetime.strptime(request.form['end_date'], "%d.%m.%Y"), completed, g.user.id, request.form['start_miesto'], request.form['number'], 0, 0)
-    detail = Details(request.form['meno'], request.form['text'], datetime.strptime(request.form['start_date'], "%d.%m.%Y"), end_date, completed, g.user.id, request.form['start_miesto'], request.form['number'], 0, 0)
-    db.session()    
-    db.session.add(detail)
-    db.session.commit()
-
-    detail_json = {
-        "meno": request.form['meno'],
-        "text": request.form['text'],
-        "start_date": str(datetime.strptime(request.form['start_date'], "%d.%m.%Y")),
-        "end_date": end_date,
-        "completed": completed,
-        "user_id": int(g.user.id),
-        "start_miesto": request.form['start_miesto'],
-        "number": request.form['number'],
-        "email": 0,
-        "articleID": 0
-    }
-
-    try:
-        print("LOG inserting 'detail' into mongoDB will start")
-        details_mongo.insert_one(detail_json)
-        print("LOG inserting into mongoDB done")
-    except:
-        print("ERROR error saving 'deatil' to mongoDB")
-    flash('Spr%sva bola ulo%sen%s' % (u"\u00E1", u"\u017E", u"\u00E1"))
-    return redirect(url_for('gettingstarted.akozacat'))
-
-@app.route('/details_show', methods=['GET'])
-@login_required
-def details_show():
-    detail = Details.query.filter_by(user_id=g.user.id).first()
-    if detail == None:        
-        return redirect(url_for('details'))
-    try:
-        detail.start_date = detail.start_date.strftime('%d.%m.%Y')
-    except:
-        pass
-    try:
-        detail.end_date = detail.end_date.strftime('%d.%m.%Y')
-    except:
-        pass
-    
-    if detail.end_date == None:
-        detail.end_date = 'Cesta nie je ukon%sen%s' %(u"\u010D", u"\u00E1")
-        
-    if detail.completed == True:
-            detail.completed = 'Ano'
-    if detail.completed == False:
-            detail.completed = 'Nie'
-            
-    if request.method == 'GET':
-        return render_template('details_show.html', detail=detail)
-
-@app.route('/details_edit', methods=['GET','POST'])
-@login_required
-def details_edit():
-    detail = Details.query.filter_by(user_id=g.user.id).first()
-    if request.method == 'GET':
-        try:
-            detail.start_date = detail.start_date.strftime('%d.%m.%Y')
-        except:
-            pass
-        try:
-            detail.end_date = detail.end_date.strftime('%d.%m.%Y')
-        except:
-            pass
-        
-        if detail.end_date == None:
-            detail.end_date = 'Cesta nie je ukon%sen%s' %(u"\u010D", u"\u00E1")
-        
-        if detail.completed == False:
-            activeBtn = '0'
-        if detail.completed == True:
-            activeBtn = '1'
-            
-        #return render_template('details_edit.html', detail=detail)
-        return render_template('details_edit.html', detail=detail, active_btns=activeBtn)
-    
-    detail.meno = request.form['meno']
-    detail.text = request.form['text']
-    detail.number = request.form['number']
-    detail.start_miesto = request.form['start_miesto']
-    detail.start_date = datetime.strptime(request.form['start_date'], "%d.%m.%Y")
-    detail.end_date = request.form['end_date']
-    
-    komplet = request.form.get('gender', '')
-    
-    if komplet == '1':
-        detail.completed = True
-    if komplet == '0':
-        detail.completed = False
-    
-    try:
-        detail.end_date = datetime.strptime(request.form['end_date'], "%d.%m.%Y")
-    except:
-        detail.end_date = None
-    db.session()    
-    db.session.add(detail)
-    db.session.commit()
-    return redirect(url_for('details_show'))
 
 @app.route('/comments',methods=['GET'])
 @login_required
@@ -497,5 +392,5 @@ if __name__ == '__main__':
     app.run(debug = False)
 """
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
 """
