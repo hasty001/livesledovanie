@@ -11,12 +11,13 @@
         </div>
     </div>
 
+    {% if detail.img is defined %}
     <div class="control-group">
         <div class="controls">
-
             <img src="{{ detail.img.eager[0].secure_url }}">
         </div>
     </div>
+    {% endif %}
 
     <div class="control-group">
         <div class="controls">
