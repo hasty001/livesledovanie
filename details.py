@@ -58,7 +58,7 @@ def details_add():
         "meno": request.form['meno'],
         "text": request.form['text'],
         "start_date": str(datetime.strptime(request.form['start_date'], "%d.%m.%Y")),
-        "end_date": end_date,
+        "end_date": "0000-00-00 00:00:00",
         "completed": completed,
         "user_id": int(g.user.id),
         "start_miesto": request.form['start_miesto'],
