@@ -2,6 +2,8 @@ from flask import Blueprint, jsonify
 from flask import Flask, session, request, flash, url_for, redirect, render_template, abort, g, send_from_directory, current_app
 from flask.ext.login import LoginManager, login_user , logout_user , current_user , login_required
 from cestadb import *
+from bson import json_util
+import json
 from werkzeug import secure_filename
 import cloudinary
 from cloudinary.uploader import upload
@@ -10,8 +12,6 @@ import uuid
 import os
 
 details = Blueprint('details', __name__, template_folder='templates')
-
-DEFAULT_TAG = "live_sledovanie"
 
 def dump_response(response):
     print("Upload response:")
@@ -36,25 +36,13 @@ def details_add():
     file = request.files['file']
 
     if file and allowed_file(file.filename):
-        filename = str(uuid.uuid4()) + secure_filename(file.filename)
-        file.save(os.path.join(path, filename))
-        #upload(os.path.join(path, filename))
-
-        response = upload(
-            os.path.join(path, filename), tags=DEFAULT_TAG,
-            eager = dict(
-                width = 200,
-                height = 150,
-                crop = "scale"
-            ),
+        file_to_upload = request.files['file']
+        upload_result = upload(
+            file_to_upload,
+            tags="live_sledovanie_profile",
+            eager={'width': 248, 'height': 140, 'crop': 'fill' }
         )
-        dump_response(response)
-        url, options = cloudinary_url(response['public_id'],
-                                      format=response['format'],
-                                      width=200,
-                                      height=150,
-                                      crop="fill"
-                                      )
+        dump_response(upload_result)
 
         print("file to cloudinary uploaded")
     else:
@@ -76,7 +64,8 @@ def details_add():
         "start_miesto": request.form['start_miesto'],
         "number": request.form['number'],
         "email": 0,
-        "articleID": 0
+        "articleID": 0,
+        "img": upload_result
     }
 
     try:
@@ -92,28 +81,29 @@ def details_add():
 @details.route('/details_show', methods=['GET'])
 @login_required
 def details_show():
-    detail = Details.query.filter_by(user_id=g.user.id).first()
-    if detail == None:
-        return redirect(url_for('details'))
+    detail_mongo = details_mongo.find_one({'user_id':g.user.id})
+
+    if detail_mongo is None:
+        return redirect(url_for('details.details_add'))
     try:
-        detail.start_date = detail.start_date.strftime('%d.%m.%Y')
+        detail_mongo['start_date'] = detail_mongo['start_date'] .strftime('%d.%m.%Y')
     except:
         pass
     try:
-        detail.end_date = detail.end_date.strftime('%d.%m.%Y')
+        detail_mongo['end_date'] = detail_mongo['end_date'].strftime('%d.%m.%Y')
     except:
         pass
 
-    if detail.end_date == None:
-        detail.end_date = 'Cesta nie je ukon%sen%s' % (u"\u010D", u"\u00E1")
+    if detail_mongo['end_date'] == "NULL":
+        detail_mongo['end_date'] = 'Cesta nie je ukon%sen%s' % (u"\u010D", u"\u00E1")
 
-    if detail.completed == True:
-        detail.completed = 'Ano'
-    if detail.completed == False:
-        detail.completed = 'Nie'
+    if detail_mongo['completed'] == True:
+        detail_mongo['completed'] = 'Ano'
+    if detail_mongo['completed'] == False:
+        detail_mongo['completed'] = 'Nie'
 
     if request.method == 'GET':
-        return render_template('details_show.html', detail=detail)
+        return render_template('details_show.html', detail=detail_mongo)
 
 
 @details.route('/details_edit', methods=['GET', 'POST'])
