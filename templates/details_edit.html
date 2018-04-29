@@ -39,7 +39,7 @@
     <div class="control-group">
         <div class="controls">
           <input type="number" id="number" name="number" class="input-xlarge"
-            placeholder="Koľko vás ide? (0 ak nechceš uviesť)" value="{{detail.number }}"
+            placeholder="Koľko vás ide? (0 ak nechceš uviesť)" value="{{ detail.number }}"
             required>
         </div>
     </div>
@@ -93,25 +93,39 @@ $('#datepicker2').datepicker({
     </script>
         
     <div class="control-group">
-     
-    <div class="controls">
-    <p><b>Ukončil si svoju Cestu úspešne?</b></p>
-    <form>
-    {% if '1' in active_btns %}
-        <input checked type="radio" name="gender" value="1"/> Ano
-    {% else %}
-        <input type="radio" name="gender" value="1"/> Ano
-    {% endif %}
-    {% if '0' in active_btns %}
-        <input checked class="nie" type="radio" name="gender" value="0"/> Nie
-    {% else %}
-        <input class="nie" type="radio" name="gender" value="0"/> Nie
-    {% endif %}
-    
-</div>
+        <div class="controls">
+        <p><b>Ukončil si svoje putovanie?</b></p>
+        <form>
+        {% if '1' in active_btns_route %}
+            <input checked type="radio" name="route" value="1"/> Ano
+        {% else %}
+            <input type="radio" name="route" value="1"/> Ano
+        {% endif %}
+        {% if '0' in active_btns_route %}
+            <input checked class="nie" type="radio" name="route" value="0"/> Nie
+        {% else %}
+            <input class="nie" type="radio" name="route" value="0"/> Nie
+        {% endif %}
+        </div>
     </div>
     
-     
+    <div class="control-group">
+        <div class="controls">
+        <p><b>Prešiel si Cestu hrdinov SNP celú?</b></p>
+        <form>
+        {% if '1' in active_btns %}
+            <input checked type="radio" name="gender" value="1"/> Ano
+        {% else %}
+            <input type="radio" name="gender" value="1"/> Ano
+        {% endif %}
+        {% if '0' in active_btns %}
+            <input checked class="nie" type="radio" name="gender" value="0"/> Nie
+        {% else %}
+            <input class="nie" type="radio" name="gender" value="0"/> Nie
+        {% endif %}
+        </div>
+    </div>
+
     <div class="control-group">
         <div class="controls">
           <button type="submit" class="btn btn-success">Ulož</button>
