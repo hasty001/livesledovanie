@@ -109,48 +109,70 @@ def details_show():
 @details.route('/details_edit', methods=['GET', 'POST'])
 @login_required
 def details_edit():
-    detail = Details.query.filter_by(user_id=g.user.id).first()
+    detail_mongo = details_mongo.find_one({'user_id': g.user.id})
     if request.method == 'GET':
         try:
-            detail.start_date = detail.start_date.strftime('%d.%m.%Y')
+            detail_mongo['start_date'] = detail_mongo['start_date'].strftime('%d.%m.%Y')
         except:
             pass
         try:
-            detail.end_date = detail.end_date.strftime('%d.%m.%Y')
+            detail_mongo['start_date'] = detail_mongo['start_date'].strftime('%d.%m.%Y')
         except:
             pass
 
-        if detail.end_date == None:
-            detail.end_date = 'Cesta nie je ukon%sen%s' % (u"\u010D", u"\u00E1")
+        if detail_mongo['end_date'] == "NULL":
+            detail_mongo['end_date'] = 'Cesta nie je ukon%sen%s' % (u"\u010D", u"\u00E1")
 
-        if detail.completed == False:
+        if detail_mongo['completed'] == False:
             activeBtn = '0'
-        if detail.completed == True:
+        if detail_mongo['completed'] == True:
             activeBtn = '1'
 
         # return render_template('details_edit.html', detail=detail)
-        return render_template('details_edit.html', detail=detail, active_btns=activeBtn)
+        return render_template('details_edit.html', detail=detail_mongo, active_btns=activeBtn)
 
-    detail.meno = request.form['meno']
-    detail.text = request.form['text']
-    detail.number = request.form['number']
-    detail.start_miesto = request.form['start_miesto']
-    detail.start_date = datetime.strptime(request.form['start_date'], "%d.%m.%Y")
-    detail.end_date = request.form['end_date']
+
+    file = request.files['file']
+    if file and allowed_file(file.filename):
+        file_to_upload = request.files['file']
+        upload_result = upload(
+            file_to_upload,
+            tags="live_sledovanie_profile",
+            eager={'width': 248, 'height': 140, 'crop': 'fill' }
+        )
+        dump_response(upload_result)
+
+        print("file to cloudinary uploaded")
+    else:
+        upload_result = detail_mongo['img']
 
     komplet = request.form.get('gender', '')
 
     if komplet == '1':
-        detail.completed = True
+        komplet = True
     if komplet == '0':
-        detail.completed = False
+        komplet = False
 
     try:
-        detail.end_date = datetime.strptime(request.form['end_date'], "%d.%m.%Y")
+        print("writing to mongo")
+        details_mongo.update_one(
+            {'user_id': g.user.id},
+            {'$set':
+                 {
+                     'meno': request.form['meno'],
+                     'text': request.form['text'],
+                     'number': request.form['number'],
+                     'start_miesto': request.form['start_miesto'],
+                     'start_date': datetime.strptime(request.form['start_date'], "%d.%m.%Y"),
+                     'end_date': request.form['end_date'],
+                     'completed': komplet,
+                     'img': upload_result
+                 }
+            },
+            upsert=True
+        )
     except:
-        detail.end_date = None
-    db.session()
-    db.session.add(detail)
-    db.session.commit()
+        pass
+
     return redirect(url_for('details.details_show'))
 

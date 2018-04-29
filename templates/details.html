@@ -7,15 +7,15 @@
     <h3>Vyplň prosím základne informácie o tvojej Ceste</h3>
     <div class="control-group">
         <div class="controls">
-          <input type="text" id="meno" name="meno" maxlength="14" class="input-xlarge"
-            placeholder="Názov mojej skupiny (max. 14 znakov)" value="{{ request.form.meno }}"
+          <input type="text" id="meno" name="meno" maxlength="24" class="input-xlarge"
+            placeholder="Názov mojej skupiny (max. 24 znakov)" value="{{ request.form.meno }}"
             required>
         </div>
     </div>
     
     <div class="control-group">
         <div class="controls">
-          <textarea name="text" rows=10 class="input-xlarge" placeholder="O tvojej Ceste" required>{{ request.form.text }}</textarea>
+          <textarea name="text" rows=15 class="input-xlarge" placeholder="O tvojej Ceste" required>{{ request.form.text }}</textarea>
         </div>
     </div>
 
