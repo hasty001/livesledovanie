@@ -186,8 +186,7 @@ def details_edit():
                                           'img': upload_result,
                                           'finishedTracking': tracking
                                       }
-                                  }, upsert=False
-                                 )
+                                  }, upsert=False)
 
         print("writing to mongo DONE\n")
     except:
