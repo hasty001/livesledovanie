@@ -18,7 +18,16 @@
           <textarea name="text" rows=10 class="input-xlarge" placeholder="O tvojej Ceste" required>{{ request.form.text }}</textarea>
         </div>
     </div>
-    
+
+    <div class="control-group">
+        <div class="controls">
+
+             <h5>Pridaj profilovú fotku:</h5>
+             <input type="file" name="file" id="fileID"/>
+
+        </div>
+    </div>
+
     <div class="control-group">
         <div class="controls">
           <input type="text" id="start_miesto" name="start_miesto" class="input-xlarge"
@@ -34,7 +43,7 @@
             required>
         </div>
     </div>
-    
+
     <div class="control-group">
         <div class="controls">
             <p><b>Kedy vyrážaš(te)?</b></p>
@@ -45,6 +54,8 @@
             </div>
         </div>
     </div>
+
+
 <script>
 $('#datepicker').datepicker({
     format: "d.m.yyyy",
