@@ -94,17 +94,17 @@ $('#datepicker2').datepicker({
         
     <div class="control-group">
         <div class="controls">
-        <p><b>Ukončil si svoje putovanie?</b></p>
+        <p><b>Ukončil si putovanie?</b></p>
         <form>
-        {% if '1' in active_btns_route %}
-            <input checked type="radio" name="route" value="1"/> Ano
+        {% if '1' in tracking %}
+            <input checked type="radio" name="tracking" value="1"/> Ano
         {% else %}
-            <input type="radio" name="route" value="1"/> Ano
+            <input type="radio" name="tracking" value="1"/> Ano
         {% endif %}
-        {% if '0' in active_btns_route %}
-            <input checked class="nie" type="radio" name="route" value="0"/> Nie
+        {% if '0' in tracking %}
+            <input checked class="nie" type="radio" name="tracking" value="0"/> Nie
         {% else %}
-            <input class="nie" type="radio" name="route" value="0"/> Nie
+            <input class="nie" type="radio" name="tracking" value="0"/> Nie
         {% endif %}
         </div>
     </div>
@@ -113,12 +113,12 @@ $('#datepicker2').datepicker({
         <div class="controls">
         <p><b>Prešiel si Cestu hrdinov SNP celú?</b></p>
         <form>
-        {% if '1' in active_btns %}
+        {% if '1' in snp %}
             <input checked type="radio" name="gender" value="1"/> Ano
         {% else %}
             <input type="radio" name="gender" value="1"/> Ano
         {% endif %}
-        {% if '0' in active_btns %}
+        {% if '0' in snp %}
             <input checked class="nie" type="radio" name="gender" value="0"/> Nie
         {% else %}
             <input class="nie" type="radio" name="gender" value="0"/> Nie
