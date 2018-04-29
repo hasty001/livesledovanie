@@ -2,9 +2,28 @@ from flask import Blueprint, jsonify
 from flask import Flask, session, request, flash, url_for, redirect, render_template, abort, g, send_from_directory, current_app
 from flask.ext.login import LoginManager, login_user , logout_user , current_user , login_required
 from cestadb import *
+from werkzeug import secure_filename
+import cloudinary
+from cloudinary.uploader import upload
+from cloudinary.utils import cloudinary_url
+import uuid
+import os
 
 details = Blueprint('details', __name__, template_folder='templates')
 
+DEFAULT_TAG = "live_sledovanie"
+
+def dump_response(response):
+    print("Upload response:")
+    for key in sorted(response.keys()):
+        print("  %s: %s" % (key, response[key]))
+
+path = 'img/'
+
+# For a given file, return whether it's an allowed type or not
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1] in set(['png', 'jpg', 'jpeg', 'gif', 'JPG', 'JPEG', 'PNG'])
 
 @details.route('/details', methods=['GET','POST'])
 @login_required
@@ -14,8 +33,35 @@ def details_add():
     end_date='NULL'
     #user_id = g.user
     completed = 0
+    file = request.files['file']
+
+    if file and allowed_file(file.filename):
+        filename = str(uuid.uuid4()) + secure_filename(file.filename)
+        file.save(os.path.join(path, filename))
+        #upload(os.path.join(path, filename))
+
+        response = upload(
+            os.path.join(path, filename), tags=DEFAULT_TAG,
+            eager = dict(
+                width = 200,
+                height = 150,
+                crop = "scale"
+            ),
+        )
+        dump_response(response)
+        url, options = cloudinary_url(response['public_id'],
+                                      format=response['format'],
+                                      width=200,
+                                      height=150,
+                                      crop="fill"
+                                      )
+
+        print("file to cloudinary uploaded")
+    else:
+        filename = 'None'
     #detail = Details(request.form['meno'], request.form['text'], datetime.strptime(request.form['start_date'], "%d.%m.%Y"), datetime.strptime(request.form['end_date'], "%d.%m.%Y"), completed, g.user.id, request.form['start_miesto'], request.form['number'], 0, 0)detail = Details(request.form['meno'], request.form['text'], datetime.strptime(request.form['start_date'], "%d.%m.%Y"), datetime.strptime(request.form['end_date'], "%d.%m.%Y"), completed, g.user.id, request.form['start_miesto'], request.form['number'], 0, 0)
-    detail = Details(request.form['meno'], request.form['text'], datetime.strptime(request.form['start_date'], "%d.%m.%Y"), end_date, completed, g.user.id, request.form['start_miesto'], request.form['number'], 0, 0)
+    detail = Details(request.form['meno'], request.form['text'], datetime.strptime(request.form['start_date'], "%d.%m.%Y")
+                     , end_date, completed, g.user.id, request.form['start_miesto'], request.form['number'], 0, 0)
     db.session()
     db.session.add(detail)
     db.session.commit()
