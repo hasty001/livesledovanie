@@ -363,20 +363,19 @@ def miesta():
     if request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
-            # Make the filename safe, remove unsupported chars
-            filename = str(uuid.uuid4()) + secure_filename(file.filename)
-            # Move the file form the temporal folder to
-            # the upload folder we setup
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            print("LOG img saved to openshift")
-            resize_and_copy_to_cesta_ftp(filename,app.config['UPLOAD_FOLDER'],'miesta')
-            print("LOG img copied to ftp")
-            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            print("LOG img deleted from openshift")
-            # Redirect the user to the uploaded_file route, which
-            # will basically show on the browser the uploaded file
+            file_to_upload = request.files['file']
+            upload_result = upload(
+                file_to_upload,
+                tags="pois",
+                eager={'width': 248, 'height': 140, 'crop': 'fill'}
+            )
         else:
-            filename = 'None'
+            upload_result = None
+
+        try:
+            accuracy = int(float(request.form['accuracy']))
+        except:
+            accuracy = None
 
         if not request.form['lat']:
             flash('Suradnice neboli zadane', 'error')
@@ -388,10 +387,10 @@ def miesta():
             flash('Kategoria nebola zvolena', 'error')
         else:
             miesto = {
-                'accuracy': int(float(request.form['accuracy'])),
+                'accuracy': accuracy,
                 'category': request.form['category'],
                 'name': request.form['name'],
-                'img_url': filename,
+                'img_url': upload_result,
                 'created': datetime.now(),
                 'text': request.form['text']
             }
