@@ -20,17 +20,10 @@
         
         <td><a href="/spravy/{{ sprava.id }}">{{ sprava.pub_date.strftime('%d.%m.\'%y %H:%M:%S') }}<br><i class="icon-pencil"></i> Edit  </a></td>
         <td>{{ sprava.text }} <br> <br>
-            {% if sprava.lessOne(sprava) %}
-            <form action="/delete/{{ sprava.id }}" method="post" class="display">
-                <label for="mySubmit" class="btn btn-danger"><i class="icon-trash icon-white"></i> Zmaž</label>
-                <input id="mySubmit" type="submit" name="sprava_to_delete" value="Zmaž správu" class="hidden">
-            </form>
-            
-             {% endif %}
-        <a href="http://embedded.freemap.sk/?layers=T&lon={{sprava.lon}}&amp;lat={{sprava.lat}}&amp;zoom=16&marker=http://cestasnp.sk/images/sipka_6.png,32,35,-16,-35" target="_blank" class="ukaz_txt"><i class="icon-map-marker"></i> Mapa</a>
+        <a href="http://embedded.freemap.sk/?layers=T&lon={{sprava.lon}}&amp;lat={{sprava.lat}}&amp;zoom=16&marker=http://cestasnp.sk/img/952d046cd38e7ea4c008912482761095.png,32,32,-16,-32" target="_blank" class="ukaz_txt"><i class="icon-map-marker"></i> Mapa</a>
         
-        {% if sprava.fotoUploaded(sprava) %}
-        <a href="http://cestasnp.sk/images/stories/Ostatne/sledovanie_upload/{{sprava.user_id}}/{{sprava.img}}" target="_blank" class="ukaz_txt"><i class="icon-picture"></i> Fotka</a>
+        {% if sprava.img is not none %}
+        <a href="{{sprava.img}}" target="_blank" class="ukaz_txt"><i class="icon-picture"></i> Fotka</a>
         {% endif %}
         </td>
       </tr>

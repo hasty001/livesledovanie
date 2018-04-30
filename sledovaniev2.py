@@ -15,6 +15,7 @@ from details import details
 from gettingstarted import gettingstarted
 import uuid
 import phpass
+from cloudinary.uploader import upload
 
 
 app = Flask(__name__)
@@ -41,6 +42,7 @@ login_manager.login_message = u"Prihl%ss sa pou%sit%sm prihl. %sdajov CestaSNP.s
 path = 'img/'
 app.config['UPLOAD_FOLDER'] = path
 app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg', 'gif', 'JPG', 'JPEG'])
+
 
 # For a given file, return whether it's an allowed type or not
 def allowed_file(filename):
@@ -242,17 +244,17 @@ def spravy():
     if request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
-            # Make the filename safe, remove unsupported chars
-            filename = str(uuid.uuid4()) + secure_filename(file.filename)
-            # Move the file form the temporal folder to
-            # the upload folder we setup
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            resize_and_copy_to_cesta_ftp(filename,path,g.user.id)
-            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            # Redirect the user to the uploaded_file route, which
-            # will basically show on the browser the uploaded file
+            file_to_upload = request.files['file']
+            upload_result = upload(
+                file_to_upload,
+                tags="live_sledovanie",
+                eager={'width': 248, 'height': 140, 'crop': 'fill'}
+            )
+            filename = upload_result["url"]
         else:
-            filename = 'None'
+            upload_result = None
+            filename = None
+
         if not request.form['lat']:
             flash('Title is required', 'error')
         elif not request.form['lon']:
@@ -279,7 +281,7 @@ def spravy():
                              "lat": float(request.form['lat']),
                              "lon": float(request.form['lon']),
                              "text": request.form['text'],
-                             "img": filename,
+                             "img": upload_result,
                              "pub_date": str(cas()).split('+')[0].split('.')[0],
                              "pub_date_milseconds": "timestamp",
                              "user_id": int(g.user.id),
@@ -303,16 +305,38 @@ def spravy():
 @login_required
 def show_or_update(id):
     sprava = Sprava.query.get(id)
+    print(sprava.pub_date)
+    sprava_mongo = spravy_mongo.find_one({'$and':[{'user_id': g.user.id}, {'pub_date':str(sprava.pub_date)}]})
+    print(sprava_mongo)
     if request.method == 'GET':
         return render_template('edit.html',sprava=sprava)
+
     sprava.lat = request.form['lat']
-    sprava.lon  = request.form['lon']
-    sprava.text  = request.form['text']
+    sprava.lon = request.form['lon']
+    sprava.text = request.form['text']
     sprava.accuracy = request.form['accuracy']
-    
+
     # save changes to DB
     db.session()
     db.session.commit()
+
+    try:
+        print("writing to mongo STARTING")
+        print(request.form['text'])
+        spravy_mongo.update_one({'$and': [{'user_id': g.user.id}, {'pub_date':str(sprava.pub_date)}]},
+                                 {'$set':
+                                      {
+                                          'lat': request.form['lat'],
+                                          'lon': request.form['lon'],
+                                          'text': request.form['text'],
+                                          'accuracy': request.form['accuracy']
+                                      }
+                                  }, upsert=False)
+        print("writing to mongo DONE\n")
+    except:
+        print("some error")
+        pass
+
     return redirect(url_for('index'))
 
 @app.route('/uploads/<filename>')
