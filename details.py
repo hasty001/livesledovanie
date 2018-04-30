@@ -173,20 +173,18 @@ def details_edit():
 
     try:
         print("writing to mongo STARTING")
-        details_mongo.update_one({'user_id': g.user.id},
-                                 {'$set':
-                                      {
-                                          'meno': request.form['meno'],
-                                          'text': request.form['text'],
-                                          'number': request.form['number'],
-                                          'start_miesto': request.form['start_miesto'],
-                                          'start_date': datetime.strptime(request.form['start_date'], "%d.%m.%Y"),
-                                          'end_date': request.form['end_date'],
-                                          'completed': komplet,
-                                          'img': upload_result,
-                                          'finishedTracking': tracking
-                                      }
-                                  }, upsert=False)
+        details_mongo.update_one({'user_id': g.user.id},{'$set': {
+            'meno': request.form['meno'],
+            'text': request.form['text'],
+            'number': request.form['number'],
+            'start_miesto': request.form['start_miesto'],
+            'start_date': datetime.strptime(request.form['start_date'], "%d.%m.%Y"),
+            'end_date': request.form['end_date'],
+            'number': request.form['number'],
+            'completed': komplet,
+            'img': upload_result,
+            'finishedTracking': tracking
+        }}, upsert=False)
 
         print("writing to mongo DONE\n")
     except:
