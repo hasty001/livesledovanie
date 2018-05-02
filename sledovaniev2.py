@@ -140,30 +140,40 @@ def login():
 
             if pwhash.hexdigest() == saved_password:
                 old_password_ok = True
+                print("old_password_ok z Jos_users je vyhodnotene ako True na zaklade md5")
         except:
             new_password_ok = phpass.PasswordHash()
             new_password_ok = new_password_ok.check_password(pw=password, stored_hash=new_password_to_check)
+            print("old_password_ok z Jos_users je vyhodnotene ako %s na zaklade phpass" %new_password_ok)
 
-
+        print("old_password_ok %s, new_password_ok %s" %(old_password_ok, new_password_ok))
         if old_password_ok == False and new_password_ok == False:
+            print("ani jedno heslo nie je spravne")
             flash('U%s%svate%ssk%s meno alebo heslo nie je spr%svne' % (
             u"\u017E", u"\u00ED", u"\u013E", u"\u00E9", u"\u00E1"))
             return redirect(url_for('login'))
 
+        print("idem robit login")
         login_user(registered_user, remember=True)
+
+        print("query na details")
+        print(registered_user.id)
 
         usersId = Details.query.filter_by(user_id=registered_user.id).first()
         try:
+            print("skusam usersId.meno")
             usersId = usersId.meno
         except:
-            return redirect(url_for('details'))
-        # flash('uzivatel s menom %s uz vyplnil detaily'  %usersId)
+            return redirect(url_for('details.details_show'))
+            print("redirect na details")
+
+
         return redirect(request.args.get('next') or url_for('index'))
 
     except:
 
         try:
-            db_con = mysql.connector.connect("mysql://k72ny9v0yxb0:gqnkzd22wzlk@mariadb101.websupport.sk:3312")
+            db_con = mysql.connector.connect(os.environ['WORDPRESS_DB'])
             print("connected to wordpres DB")
 
             cursor5= db_con.cursor()
