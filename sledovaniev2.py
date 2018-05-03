@@ -277,10 +277,11 @@ def spravy():
                 print("accuracy nie je nastavena a bude 100")
                 accuracy = 100
             else:
+                print("presnost bude teraz nastavena na int")
                 accuracy = int(request.form['accuracy'])
                 print("presnost je teraz nastavena na int")
                 print(accuracy)
-                
+
             details = Details.query.with_entities(Details.id).filter_by(user_id=g.user.id).first()
             sprava = Sprava(request.form['lat'], request.form['lon'], request.form['text'], filename,
                             accuracy)
