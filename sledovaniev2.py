@@ -252,19 +252,6 @@ def new():
 @login_required
 def spravy():
     if request.method == 'POST':
-        file = request.files['file']
-        if file and allowed_file(file.filename):
-            file_to_upload = request.files['file']
-            upload_result = upload(
-                file_to_upload,
-                tags="live_sledovanie",
-                eager={'width': 248, 'height': 140, 'crop': 'fill'}
-            )
-            filename = upload_result["url"]
-        else:
-            upload_result = None
-            filename = None
-
         if not request.form['lat']:
             flash('Title is required', 'error')
         elif not request.form['lon']:
@@ -272,17 +259,36 @@ def spravy():
         elif not request.form['text']:
             flash('Text is required', 'error')
         else:
+            file = request.files['file']
+            if file and allowed_file(file.filename):
+                file_to_upload = request.files['file']
+                upload_result = upload(
+                    file_to_upload,
+                    tags="live_sledovanie",
+                    eager={'width': 248, 'height': 140, 'crop': 'fill'}
+                )
+                filename = upload_result["url"]
+                print("fotka poslana na cloudinary, DONE")
+            else:
+                upload_result = None
+                filename = None
+            print("presnost je %s") %request.form['accuracy']
             if not request.form['accuracy']:
-                accuracy = None
+                print("accuracy nie je nastavena a bude 100")
+                accuracy = 100
             else:
                 accuracy = int(request.form['accuracy'])
+                print("presnost je %s") %accuracy
             details = Details.query.with_entities(Details.id).filter_by(user_id=g.user.id).first()
             sprava = Sprava(request.form['lat'], request.form['lon'], request.form['text'], filename,
-                            request.form['accuracy'])
+                            accuracy)
+
             sprava.user_id = g.user.id
             sprava.details_id = details.id
             #sprava.accuracy = request.form['accuracy']
             # save to DB
+            print("do SQL vkladam")
+            print(sprava)
             db.session()    
             db.session.add(sprava)
             db.session.commit()
