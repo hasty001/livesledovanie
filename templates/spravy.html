@@ -53,7 +53,7 @@ function setGeoLocation(){
             document.getElementById('lat').value = position.coords.latitude;
             document.getElementById('lon').value = position.coords.longitude;
             document.getElementById('presnost').innerHTML = "Presnost pozicie je +/-" + position.coords.accuracy + " m";
-            document.getElementById('accuracy').value = position.coords.accuracy;
+            document.getElementById('accuracy').value = Math.round(position.coords.accuracy);
         }
       };
 
