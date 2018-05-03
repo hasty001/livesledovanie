@@ -272,13 +272,15 @@ def spravy():
             else:
                 upload_result = None
                 filename = None
-            print("presnost je %s") %request.form['accuracy']
+            print("presnost je podla formularu %s") %request.form['accuracy']
             if not request.form['accuracy']:
                 print("accuracy nie je nastavena a bude 100")
                 accuracy = 100
             else:
                 accuracy = int(request.form['accuracy'])
-                print("presnost je %s") %accuracy
+                print("presnost je teraz nastavena na int")
+                print(accuracy)
+                
             details = Details.query.with_entities(Details.id).filter_by(user_id=g.user.id).first()
             sprava = Sprava(request.form['lat'], request.form['lon'], request.form['text'], filename,
                             accuracy)
