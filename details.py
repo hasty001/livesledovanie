@@ -61,6 +61,12 @@ def details_add():
     detail_json["articleID"] = 0
     detail_json["finishedTracking"] = False
 
+    detail = Details(request.form['meno'], request.form['text'], datetime.strptime(request.form['start_date'], "%d.%m.%Y")
+                     , end_date, completed, g.user.id, request.form['start_miesto'], request.form['number'], 0, 0)
+    db.session()
+    db.session.add(detail)
+    db.session.commit()
+
 
     try:
         print("LOG inserting 'detail' into mongoDB will start")

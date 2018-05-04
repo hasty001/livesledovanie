@@ -282,7 +282,28 @@ def spravy():
                 print("presnost je teraz nastavena na int")
                 print(accuracy)
 
-            details = Details.query.with_entities(Details.id).filter_by(user_id=g.user.id).first()
+            print("latitude")
+            print(request.form['lat'])
+            print("longitude")
+            print(request.form['lon'])
+            print("text")
+            print(request.form['text'])
+
+            try:
+                details = Details.query.with_entities(Details.id).filter_by(user_id=g.user.id).first()
+                print("detais id je: %s") %details.id
+            except:
+                print("details id nie je v SQl, hladam v mongu")
+                detail_mongo = details_mongo.find_one({'user_id': g.user.id})
+
+
+                if detail_mongo is None:
+                    print("detail v mongu nie je")
+                    flash('Spr%sva nebola ulo%sen%s, vypln Detail o tvojej Ceste' % (u"\u00E1", u"\u017E", u"\u00E1"))
+                    return redirect(url_for('details.details_add'))
+                print("details id v mongu je ako: %s") % detail_mongo['_id']
+
+            print("ukladam spravu")
             sprava = Sprava(request.form['lat'], request.form['lon'], request.form['text'], filename,
                             accuracy)
 
