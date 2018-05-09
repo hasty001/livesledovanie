@@ -16,7 +16,7 @@ from gettingstarted import gettingstarted
 import uuid
 import phpass
 from cloudinary.uploader import upload
-
+import json
 
 app = Flask(__name__)
 
@@ -295,8 +295,6 @@ def spravy():
             except:
                 print("details id nie je v SQl, hladam v mongu")
                 detail_mongo = details_mongo.find_one({'user_id': g.user.id})
-
-
                 if detail_mongo is None:
                     print("detail v mongu nie je")
                     flash('Spr%sva nebola ulo%sen%s, vypln Detail o tvojej Ceste' % (u"\u00E1", u"\u017E", u"\u00E1"))
@@ -387,14 +385,19 @@ def uploaded_file(filename):
 
 @app.route('/comments',methods=['GET'])
 @login_required
-def comments():  
+def comments():
     try:
-        clanok = Details.query.with_entities(Details.articleID).filter_by(user_id=g.user.id).first()
-        clanok_id = clanok.articleID
-        comments=Jos_jcomments.query.filter_by(object_id = clanok_id).order_by(Jos_jcomments.date.desc()).all()
-        return render_template('comments.html', comments=comments, clanok_id=clanok_id)
+        detail_mongo = details_mongo.find_one({'user_id': g.user.id})
+        if detail_mongo is None:
+            flash('Najpr musis vyplnit Detail o tvojej Ceste')
+            return redirect(url_for('details.details_add'))
+        comments = comments_mongo.find({'travellerDetails.id': str(detail_mongo['_id'])}).sort("date", -1)
+        output = []
+        for comment in comments:
+            output.append(comment)
+        return render_template('comments.html', comments=output)
     except:
-        flash('Spojenie bolo ukoncene, prihlas sa znovu')
+        flash('Spojenie bolo ukoncene')
         return redirect(url_for('index'))
 
 @app.route('/miesta', methods=['GET','POST'])

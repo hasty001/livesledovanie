@@ -17,6 +17,7 @@ mongodb = client.cestasnp
 poi = mongodb.pois
 spravy_mongo = mongodb.traveler_messages
 details_mongo = mongodb.traveler_details
+comments_mongo = mongodb.traveler_comments
 
 
 #SQL for others
