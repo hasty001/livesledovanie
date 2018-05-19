@@ -44,11 +44,11 @@ function setGeoLocation(){
     function success (position) {
         
       if (position.coords.accuracy > 80) {
-        alert("Pozícia nie je dostatočne presná. Načítaj súradnice ešte raz!\n\nNezabudni povoliť 'satelity GPS' v lokalizačných službách tvojho telefónu.");
+        alert("Pozícia nie je dostatočne presná. Skús načíť súradnice ešte raz!\n\nNezabudni povoliť 'satelity GPS' v lokalizačných službách tvojho telefónu.");
              document.getElementById('lat').value = position.coords.latitude;
              document.getElementById('lon').value = position.coords.longitude;
              document.getElementById('presnost').innerHTML = "<b><font color=\"red\">Presnost pozicie je +/-" + position.coords.accuracy + " m</font></b>";
-           	 document.getElementById('accuracy').value = position.coords.accuracy;
+           	 document.getElementById('accuracy').value = Math.round(position.coords.accuracy);
         } else {
             document.getElementById('lat').value = position.coords.latitude;
             document.getElementById('lon').value = position.coords.longitude;
