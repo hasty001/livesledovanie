@@ -251,11 +251,15 @@ def new():
 @app.route('/spravy', methods=['GET', 'POST'])
 @login_required
 def spravy():
+    try:
+        suradnice = Sprava.query.filter_by(user_id=g.user.id).order_by(Sprava.pub_date.desc()).first()
+    except:
+        suradnice = None
     if request.method == 'POST':
         if not request.form['lat']:
-            flash('Title is required', 'error')
+            flash('Latitude is required', 'error')
         elif not request.form['lon']:
-            flash('Text is required', 'error')
+            flash('Longitude is required', 'error')
         elif not request.form['text']:
             flash('Text is required', 'error')
         else:
@@ -286,8 +290,13 @@ def spravy():
             print(request.form['lat'])
             print("longitude")
             print(request.form['lon'])
-            print("text")
-            print(request.form['text'])
+            try:
+                text_form = request.form['text']
+                print("text: '%s'" % text_form)
+            except:
+                text_form = 'none'
+                flash('Text nedorazil na server, skus to znova alebo kontaktuj nas', 'error')
+                return render_template('spravy.html', suradnice=suradnice)
 
             try:
                 details = Details.query.with_entities(Details.id).filter_by(user_id=g.user.id).first()
@@ -336,7 +345,7 @@ def spravy():
             return redirect(url_for('index'))
 
 
-    suradnice = Sprava.query.filter_by(user_id = g.user.id).order_by(Sprava.pub_date.desc()).first()
+    #suradnice = Sprava.query.filter_by(user_id = g.user.id).order_by(Sprava.pub_date.desc()).first()
     return render_template('spravy.html', suradnice=suradnice)
 
 @app.route('/spravy/<int:id>', methods=['GET','POST'])
