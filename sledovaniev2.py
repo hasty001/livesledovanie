@@ -75,6 +75,13 @@ app.register_blueprint(gettingstarted)
 def index():  
     try:
         spravy=Sprava.query.filter_by(user_id = g.user.id).order_by(Sprava.pub_date.desc()).all()
+        """vsetky_spravy_mongo = spravy_mongo.find({'$and':[{'user_id': g.user.id}]}).sort("pub_date", -1)
+        output = []
+        for sprava in vsetky_spravy_mongo:
+            output.append(sprava)
+
+        print(output)
+        """
         return render_template('index.html', spravy=spravy)
     except:
         flash('Spojenie bolo ukoncene, prihlas sa znovu')
@@ -356,7 +363,7 @@ def show_or_update(id):
     sprava_mongo = spravy_mongo.find_one({'$and':[{'user_id': g.user.id}, {'pub_date':str(sprava.pub_date)}]})
     print(sprava_mongo)
     if request.method == 'GET':
-        return render_template('edit.html',sprava=sprava)
+        return render_template('edit.html',sprava=sprava_mongo)
 
     sprava.lat = request.form['lat']
     sprava.lon = request.form['lon']
@@ -381,7 +388,8 @@ def show_or_update(id):
                                   }, upsert=False)
         print("writing to mongo DONE\n")
     except:
-        print("some error")
+        print("edit not saved, couldn't write to mongo")
+        flash("Error: ulozenie sa nepodarilo.")
         pass
 
     return redirect(url_for('index'))
@@ -463,10 +471,9 @@ def miesta():
 
 
 
-
+"""
 if __name__ == '__main__':
     app.run(debug = False)
 """
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
-"""
