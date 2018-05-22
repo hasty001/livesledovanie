@@ -301,7 +301,6 @@ def spravy():
             print(request.form['lon'])
             try:
                 text_form = request.form['text']
-                print("text: '%s'" % text_form)
             except:
                 text_form = 'none'
                 flash('Text nedorazil na server, skus to znova alebo kontaktuj nas', 'error')
@@ -379,7 +378,6 @@ def show_or_update(id):
 
     try:
         print("writing to mongo STARTING")
-        print(text)
         spravy_mongo.update_one({'$and': [{'user_id': g.user.id}, {'pub_date':str(sprava.pub_date)}]},
                                  {'$set':
                                       {
@@ -474,9 +472,10 @@ def miesta():
 
 
 
-"""
+
 if __name__ == '__main__':
     app.run(debug = False)
 """
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
+"""
