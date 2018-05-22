@@ -369,6 +369,7 @@ def show_or_update(id):
     sprava.lon = request.form['lon']
     sprava.text = request.form['text']
     text = request.form['text']
+    print(text)
     sprava.accuracy = request.form['accuracy']
 
     # save changes to DB
