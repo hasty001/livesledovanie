@@ -376,6 +376,7 @@ def show_or_update(id):
 
     try:
         print("writing to mongo STARTING")
+        print(sprava.text)
         print(request.form['text'])
         spravy_mongo.update_one({'$and': [{'user_id': g.user.id}, {'pub_date':str(sprava.pub_date)}]},
                                  {'$set':
