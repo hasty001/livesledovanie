@@ -368,6 +368,7 @@ def show_or_update(id):
     sprava.lat = request.form['lat']
     sprava.lon = request.form['lon']
     sprava.text = request.form['text']
+    text = request.form['text']
     sprava.accuracy = request.form['accuracy']
 
     # save changes to DB
@@ -376,14 +377,13 @@ def show_or_update(id):
 
     try:
         print("writing to mongo STARTING")
-        print(sprava.text)
-        print(request.form['text'])
+        print(text)
         spravy_mongo.update_one({'$and': [{'user_id': g.user.id}, {'pub_date':str(sprava.pub_date)}]},
                                  {'$set':
                                       {
                                           'lat': request.form['lat'],
                                           'lon': request.form['lon'],
-                                          'text': request.form['text'],
+                                          'text': text,
                                           'accuracy': request.form['accuracy']
                                       }
                                   }, upsert=False)
