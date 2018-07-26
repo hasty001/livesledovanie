@@ -86,7 +86,7 @@ def details_show():
     if detail_mongo is None:
         return redirect(url_for('details.details_add'))
     try:
-        detail_mongo['start_date'] = detail_mongo['start_date'] .strftime('%d.%m.%Y')
+        detail_mongo['start_date'] = detail_mongo['start_date'].strftime('%d.%m.%Y')
     except:
         pass
     try:
@@ -146,6 +146,7 @@ def details_edit():
 
         return render_template('details_edit.html', detail=detail_mongo, snp=completed, tracking=cesta_ukoncena)
 
+
     file = request.files['file']
     if file and allowed_file(file.filename):
         file_to_upload = request.files['file']
@@ -160,16 +161,9 @@ def details_edit():
     else:
         print("no file to upload using original")
         upload_result = detail_mongo['img']
+        print("img je: %s" %upload_result)
 
     komplet = int(request.form.get('gender', ''))
-
-    """
-    if komplet == '1':
-        komplet = True
-    if komplet == '0':
-        komplet = False
-    """
-
     tracking = request.form.get('tracking', '')
 
     if tracking == '1':
@@ -177,21 +171,36 @@ def details_edit():
     if tracking == '0':
         tracking = False
 
+    if request.form['end_date'] == 'Cesta nie je ukon%sen%s' % (u"\u010D", u"\u00E1"):
+        end_date = "0000-00-00"
+    else:
+        end_date = request.form['end_date']
+
     try:
         print("writing to mongo STARTING")
+        print end_date
+        print request.form['meno']
+        print request.form['text']
+        print request.form['number']
+        print request.form['start_miesto']
+        print request.form['start_date']
+        print end_date
+        print request.form['number']
+        print komplet
+        print upload_result
+        print tracking
+
         details_mongo.update_one({'user_id': g.user.id},{'$set': {
             'meno': request.form['meno'],
             'text': request.form['text'],
             'number': request.form['number'],
             'start_miesto': request.form['start_miesto'],
-            'start_date': datetime.strptime(request.form['start_date'], "%d.%m.%Y"),
-            'end_date': request.form['end_date'],
+            'start_date': request.form['start_date'],
+            'end_date': end_date,
             'number': request.form['number'],
             'completed': komplet,
             'img': upload_result,
-            'finishedTracking': tracking
-        }}, upsert=False)
-
+            'finishedTracking': tracking}}, upsert=False)
         print("writing to mongo DONE\n")
     except:
         print("some error")
