@@ -178,17 +178,6 @@ def details_edit():
 
     try:
         print("writing to mongo STARTING")
-        print end_date
-        print request.form['meno']
-        print request.form['text']
-        print request.form['number']
-        print request.form['start_miesto']
-        print request.form['start_date']
-        print end_date
-        print request.form['number']
-        print komplet
-        print upload_result
-        print tracking
 
         details_mongo.update_one({'user_id': g.user.id},{'$set': {
             'meno': request.form['meno'],
