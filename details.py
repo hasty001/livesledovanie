@@ -29,7 +29,7 @@ def allowed_file(filename):
 def details_add():
     if request.method == 'GET':
         return render_template('details.html')
-    end_date='NULL'
+    end_date= None
     #user_id = g.user
 
     detail_json = {
