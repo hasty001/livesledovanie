@@ -18,7 +18,7 @@ class UTC(tzinfo):
 
 def cas():
     utc = UTC()
-    d = datetime.now(tz=utc)
+    d = datetime.now()
     return d
 
 print "toto je koniec cas.py"
