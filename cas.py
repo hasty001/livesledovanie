@@ -1,6 +1,6 @@
 from datetime import tzinfo, timedelta, datetime
 
-HOUR = timedelta(hours=4)
+HOUR = timedelta(hours=2)
 # v zime +1 oproti UTC.
 # v lete +2
 
