@@ -18,3 +18,4 @@ pois_from_jano_to_mongo.py
 mysql_to_mongo.py
 add_labels_to_articles.py
 create_user.py
+photo_copy.py
