@@ -9,7 +9,7 @@ from flask import Blueprint
 from werkzeug import secure_filename
 from flask.ext.login import LoginManager, login_user , logout_user , current_user , login_required
 import hashlib
-from ftpcopy import resize_and_copy_to_cesta_ftp, delete_openshift_img
+#from ftpcopy import resize_and_copy_to_cesta_ftp, delete_openshift_img
 from cas import cas
 from cestadb import *
 from places import places
@@ -327,7 +327,6 @@ def spravy():
             #sprava.accuracy = request.form['accuracy']
             # save to DB
             print("do SQL vkladam")
-            print(sprava)
             db.session()    
             db.session.add(sprava)
             db.session.commit()
@@ -469,7 +468,6 @@ def miesta():
             flash('Miesto bolo ulo%sen%s. %sakujeme.' %(u"\u017E", u"\u00E9", u"\u010E"))
             return redirect(url_for('miesta'))
     return render_template('miesta.html')
-
 
 
 
