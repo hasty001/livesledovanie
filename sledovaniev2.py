@@ -23,7 +23,8 @@ import json
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_POOL_RECYCLE'] = 60
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['MYSQL_DB']
+#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['MYSQL_DB']
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['JAWSDB_URL']
 app.config['SQLALCHEMY_BINDS'] = {
     'db1': app.config['SQLALCHEMY_DATABASE_URI'],
     'db2': os.environ['WORDPRESS_DB']
@@ -470,9 +471,80 @@ def miesta():
     return render_template('miesta.html')
 
 
-"""
-if __name__ == '__main__':
-    app.run(debug = False)
+@app.route('/login2', methods=['GET', 'POST'])
+def login2():
+    if request.method == 'GET':
+        return render_template('login.html')
+
+    print("POST sucessfull")
+    username = request.form['username']
+    password = request.form['password']
+
+    try:
+        print("connecting to DB")
+        saved_password = Jos_users.query.filter_by(username=username).first()
+        print("robim query na Jos_users s username '%s'" % username)
+
+
+    except:
+        print(" query na Jos_users skoncila s chybou")
+        flash('hjustne mame problem 1')
+        return redirect(url_for('login2'))
+
+    registered_user = saved_password
+
+
+    saved_password = saved_password.password
+    new_password_to_check = saved_password
+
+    old_password_ok = False
+    new_password_ok = False
+
+    try:
+        list_of_password = saved_password.split(':')
+        saved_password = list_of_password[0]
+        salt = list_of_password[1]
+        # check the password
+        pwhash = hashlib.md5()
+        pwhash.update(password)
+        pwhash.update(salt)
+
+        if pwhash.hexdigest() == saved_password:
+            old_password_ok = True
+            print("old_password_ok z Jos_users je vyhodnotene ako True na zaklade md5")
+    except:
+        new_password_ok = phpass.PasswordHash()
+        new_password_ok = new_password_ok.check_password(pw=password, stored_hash=new_password_to_check)
+        print("old_password_ok z Jos_users je vyhodnotene ako %s na zaklade phpass" % new_password_ok)
+
+    print("old_password_ok %s, new_password_ok %s" % (old_password_ok, new_password_ok))
+    if old_password_ok == False and new_password_ok == False:
+        print("ani jedno heslo nie je spravne")
+        flash('U%s%svate%ssk%s meno alebo heslo nie je spr%svne' % (
+            u"\u017E", u"\u00ED", u"\u013E", u"\u00E9", u"\u00E1"))
+        return redirect(url_for('login'))
+
+    print("idem robit login")
+    login_user(registered_user, remember=True)
+
+    print("query na details")
+    print(registered_user.id)
+
+    usersId = Details.query.filter_by(user_id=registered_user.id).first()
+    try:
+        print("skusam usersId.meno")
+        usersId = usersId.meno
+    except:
+        return redirect(url_for('details.details_show'))
+        print("redirect na details")
+
+    return redirect(request.args.get('next') or url_for('index'))
+
 """
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
+#, host='0.0.0.0', port=5000
+
+"""
+if __name__ == '__main__':
+    app.run(debug=False)
