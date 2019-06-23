@@ -327,21 +327,17 @@ def spravy():
             sprava.details_id = details.id
             #sprava.accuracy = request.form['accuracy']
             # save to DB
-            print("do SQL vkladam")
-            db.session()    
-            db.session.add(sprava)
-            db.session.commit()
 
             sprava_json = {
-                             "lat": float(request.form['lat']),
-                             "lon": float(request.form['lon']),
-                             "text": request.form['text'],
-                             "img": upload_result,
-                             "pub_date": str(cas()).split('+')[0].split('.')[0],
-                             "pub_date_milseconds": "timestamp",
-                             "user_id": int(g.user.id),
-                             "details_id": int(details.id),
-                             "accuracy": accuracy
+                "lat": float(request.form['lat']),
+                "lon": float(request.form['lon']),
+                "text": request.form['text'],
+                "img": upload_result,
+                "pub_date": str(cas()).split('+')[0].split('.')[0],
+                "pub_date_milseconds": "timestamp",
+                "user_id": int(g.user.id),
+                "details_id": int(details.id),
+                "accuracy": accuracy
             }
             try:
                 print("LOG inserting od message into mongoDB will start")
@@ -349,6 +345,16 @@ def spravy():
                 print("LOG inserting into mongoDB done")
             except:
                 print("ERROR error saving sprava to mongoDB")
+
+            try:
+                print("do SQL vkladam : \n %s") %sprava.text
+                db.session()
+                db.session.add(sprava)
+                db.session.commit()
+            except:
+                print("Something went wrong")
+                return redirect(url_for('index'))
+
             flash('Spr%sva bola ulo%sen%s' %(u"\u00E1", u"\u017E", u"\u00E1"))
             return redirect(url_for('index'))
 
