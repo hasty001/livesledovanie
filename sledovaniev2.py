@@ -323,10 +323,13 @@ def spravy():
             sprava = Sprava(request.form['lat'], request.form['lon'], request.form['text'], filename,
                             accuracy)
 
-            sprava.user_id = g.user.id
-            sprava.details_id = details.id
-            #sprava.accuracy = request.form['accuracy']
-            # save to DB
+            try:
+                sprava.user_id = g.user.id
+                sprava.details_id = details.id
+                #sprava.accuracy = request.form['accuracy']
+                # save to DB
+            except:
+                print("sparva nebude ulozena v SQL")
 
             sprava_json = {
                 "lat": float(request.form['lat']),
@@ -336,7 +339,6 @@ def spravy():
                 "pub_date": str(cas()).split('+')[0].split('.')[0],
                 "pub_date_milseconds": "timestamp",
                 "user_id": int(g.user.id),
-                "details_id": int(details.id),
                 "accuracy": accuracy
             }
             try:
@@ -352,7 +354,7 @@ def spravy():
                 db.session.add(sprava)
                 db.session.commit()
             except:
-                print("Something went wrong")
+                print("DB error. Something went wrong during saving to SQL")
                 return redirect(url_for('index'))
 
             flash('Spr%sva bola ulo%sen%s' %(u"\u00E1", u"\u017E", u"\u00E1"))
