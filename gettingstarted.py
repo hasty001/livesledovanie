@@ -5,7 +5,6 @@ from flask import Flask, session, request, flash, url_for, redirect, render_temp
 gettingstarted = Blueprint('gettingstarted', __name__, template_folder='templates')
 
 @gettingstarted.route('/akozacat', methods=['GET'])
-@login_required
 def akozacat():
     if request.method == 'GET':
         return render_template('gettingstarted.html')
